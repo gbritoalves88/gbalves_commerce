@@ -1,0 +1,77 @@
+<!-- shared/header/header.component.html -->
+<mat-toolbar class="header">
+  <!-- Logo -->
+  <a class="logo" routerLink="/">
+    <mat-icon>storefront</mat-icon>
+    <span>GBAlves Commerce</span>
+  </a>
+
+  <span class="spacer"></span>
+
+  <!-- Menu Desktop -->
+  <nav class="desktop-menu">
+    <a mat-button routerLink="/">Home</a>
+
+    <button mat-button [matMenuTriggerFor]="productsMenu">
+      Produtos
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+  </nav>
+
+  <span class="spacer"></span>
+
+  <!-- Ações -->
+  <button mat-icon-button aria-label="Buscar">
+    <mat-icon>search</mat-icon>
+  </button>
+
+  <button mat-icon-button routerLink="/cart" aria-label="Carrinho">
+    <mat-icon>shopping_cart</mat-icon>
+    @if (cartItemCount > 0) {
+      <span class="badge">{{ cartItemCount }}</span>
+    }
+  </button>
+
+  <!-- Menu Mobile -->
+  <button mat-icon-button [matMenuTriggerFor]="mobileMenu" class="mobile-btn">
+    <mat-icon>menu</mat-icon>
+  </button>
+</mat-toolbar>
+
+<!-- Dropdown Produtos (Desktop) -->
+<mat-menu #productsMenu="matMenu">
+  @for (category of categories; track category.id) {
+    <button mat-menu-item [routerLink]="['/products']"
+            [queryParams]="{category: category.slug}">
+      <mat-icon>chevron_right</mat-icon>
+      <span>{{ category.name }}</span>
+    </button>
+  }
+</mat-menu>
+
+<!-- Menu Mobile Completo -->
+<mat-menu #mobileMenu="matMenu">
+  <button mat-menu-item routerLink="/">
+    <mat-icon>home</mat-icon>
+    <span>Home</span>
+  </button>
+
+  <mat-divider></mat-divider>
+
+  <span class="menu-label">Categorias</span>
+
+  @for (category of categories; track category.id) {
+    <button mat-menu-item [routerLink]="['/products']"
+            [queryParams]="{category: category.slug}">
+      <mat-icon>category</mat-icon>
+      <span>{{ category.name }}</span>
+    </button>
+  }
+
+  <mat-divider></mat-divider>
+
+  <button mat-menu-item routerLink="/cart">
+    <mat-icon>shopping_cart</mat-icon>
+    <span>Carrinho @if (cartItemCount > 0) { ({{ cartItemCount }}) }</span>
+  </button>
+</mat-menu>

@@ -1,0 +1,90 @@
+// shared/header/header.component.scss
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 0 24px;
+  height: 64px;
+  background: #1a237e !important; // Força azul escuro
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: white;
+  font-weight: 700;
+  font-size: 1.2rem;
+
+  mat-icon {
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 6px;
+    border-radius: 8px;
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.desktop-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  a, button {
+    color: white !important;
+    font-weight: 500;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+    }
+  }
+}
+
+.mobile-btn {
+  display: none;
+  color: white !important;
+}
+
+// Carrinho e busca
+button[mat-icon-button] {
+  color: white !important;
+  position: relative;
+
+  .badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: #ff4081;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktop-menu {
+    display: none;
+  }
+
+  .mobile-btn {
+    display: block;
+  }
+
+  .logo {
+    font-size: 0.95rem;
+  }
+}
