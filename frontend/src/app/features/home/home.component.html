@@ -1,1 +1,46 @@
-<p>home works!</p>
+<!-- features/home/home.component.html -->
+<section class="home">
+  <!-- Banner Carrossel -->
+  <div class="banner-carousel">
+    <div class="swiper banner-swiper">
+      <div class="swiper-wrapper">
+        @for (banner of banners; track banner.id) {
+          <div class="swiper-slide">
+            <div class="banner-slide" [style.background-image]="'url(' + banner.imageUrl + ')'">
+              <div class="banner-overlay">
+                <div class="banner-content">
+                  <h1>{{ banner.title }}</h1>
+                  <p>{{ banner.subtitle }}</p>
+                  <a [routerLink]="banner.link" class="banner-btn">
+                    {{ banner.buttonText }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+
+  <!-- Produtos em Destaque -->
+  <section class="featured-products">
+    <div class="container">
+      <div class="section-header">
+        <h2>Produtos em Destaque</h2>
+        <a routerLink="/products" class="view-all">
+          Ver todos <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </div>
+
+      <div class="products-grid">
+        @for (product of featuredProducts; track product.id) {
+          <app-product-card [product]="product"></app-product-card>
+        }
+      </div>
+    </div>
+  </section>
+</section>

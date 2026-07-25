@@ -1,0 +1,87 @@
+<!-- features/products/product-detail/product-detail.component.html -->
+@if (product) {
+  <section class="product-detail">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb">
+        <a routerLink="/">Home</a>
+        <mat-icon>chevron_right</mat-icon>
+        <a [routerLink]="['/products']" [queryParams]="{category: product.category}">
+          {{ product.category }}
+        </a>
+        <mat-icon>chevron_right</mat-icon>
+        <span>{{ product.name }}</span>
+      </nav>
+
+      <div class="product-layout">
+        <!-- Imagem -->
+        <div class="product-gallery">
+          <div class="main-image">
+            <img [src]="product.image" [alt]="product.name">
+            @if (product.originalPrice) {
+              <span class="discount-badge">-{{ calculateDiscount() }}%</span>
+            }
+          </div>
+        </div>
+
+        <!-- Informações -->
+        <div class="product-info">
+          <span class="category-tag">{{ product.category }}</span>
+          <h1>{{ product.name }}</h1>
+
+          <!-- Preço -->
+          <div class="price-block">
+            @if (product.originalPrice) {
+              <span class="original-price">R$ {{ product.originalPrice.toFixed(2) }}</span>
+            }
+            <span class="current-price">R$ {{ product.price.toFixed(2) }}</span>
+            <span class="installments">em até 3x sem juros</span>
+          </div>
+
+          <!-- Descrição -->
+          <div class="description">
+            <h3>Descrição</h3>
+            <p>{{ product.description }}</p>
+          </div>
+
+          <!-- Quantidade -->
+          <div class="quantity-selector">
+            <span>Quantidade:</span>
+            <div class="quantity-controls">
+              <button (click)="decreaseQuantity()" [disabled]="quantity <= 1">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <span class="quantity-value">{{ quantity }}</span>
+              <button (click)="increaseQuantity()" [disabled]="quantity >= product.stock">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+            <span class="stock-info">
+              {{ product.stock }} unidades disponíveis
+            </span>
+          </div>
+
+          <!-- Botão Comprar -->
+          <button mat-fab extended class="buy-btn" (click)="addToCart()">
+            <mat-icon>shopping_cart</mat-icon>
+            Adicionar ao Carrinho
+          </button>
+
+          <!-- Frete -->
+          <div class="shipping-info">
+            <mat-icon>local_shipping</mat-icon>
+            <span>Frete grátis para compras acima de R$ 199</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+} @else {
+  <section class="not-found">
+    <div class="container">
+      <mat-icon>error_outline</mat-icon>
+      <h2>Produto não encontrado</h2>
+      <a routerLink="/" mat-button>Voltar para Home</a>
+    </div>
+  </section>
+}

@@ -1,0 +1,57 @@
+// features/admin/products/products.component.scss
+.products-admin {
+  h1 {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 0;
+  }
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  p {
+    color: #999;
+    margin: 4px 0 0;
+  }
+
+  button {
+    background: #1a237e !important;
+    color: white !important;
+    border-radius: 12px !important;
+  }
+}
+
+.table-wrapper {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.product-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.low-stock {
+  color: #f44336;
+  font-weight: 700;
+}
+
+th {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+td {
+  color: #333;
+}

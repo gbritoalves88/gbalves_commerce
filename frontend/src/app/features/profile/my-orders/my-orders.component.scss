@@ -1,0 +1,64 @@
+// features/profile/my-orders/my-orders.component.scss
+.my-orders {
+  h2 {
+    font-size: 1.3rem;
+    color: #333;
+    margin: 0 0 20px;
+  }
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fafafa;
+  padding: 16px 20px;
+  border-radius: 8px;
+  gap: 16px;
+}
+
+.order-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  strong {
+    color: #333;
+  }
+
+  span {
+    color: #999;
+    font-size: 0.85rem;
+  }
+}
+
+.order-total {
+  font-weight: 700;
+  color: #1a237e;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.empty {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+  }
+}

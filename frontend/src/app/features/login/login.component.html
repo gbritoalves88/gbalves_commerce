@@ -1,0 +1,60 @@
+<!-- features/login/login.component.html -->
+<div class="login-page">
+  <div class="login-box">
+    <!-- Logo -->
+    <div class="login-logo">
+      <mat-icon>storefront</mat-icon>
+      <h1>GBAlves Commerce</h1>
+    </div>
+
+    <p class="login-subtitle">Faça login para acessar o painel administrativo</p>
+
+    <!-- Botão Entrar Direto -->
+    <button mat-flat-button class="quick-login-btn" (click)="quickLogin()">
+      <mat-icon>login</mat-icon>
+      Entrar como Administrador
+    </button>
+
+    <div class="divider">
+      <span>ou use suas credenciais</span>
+    </div>
+
+    <!-- Mensagem de erro -->
+    @if (error) {
+      <div class="error-alert">
+        <mat-icon>error_outline</mat-icon>
+        {{ error }}
+      </div>
+    }
+
+    <!-- Formulário -->
+    <form (ngSubmit)="onSubmit()" class="login-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [(ngModel)]="email" name="email"
+               placeholder="admin@gbalves.com" required>
+        <mat-icon matPrefix>email</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Senha</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'"
+               [(ngModel)]="password" name="password"
+               placeholder="Digite sua senha" required>
+        <mat-icon matPrefix>lock</mat-icon>
+        <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <button mat-flat-button class="login-btn" type="submit">
+        Entrar
+      </button>
+    </form>
+
+    <!-- Rodapé -->
+    <div class="login-footer">
+      <a routerLink="/">← Voltar para loja</a>
+    </div>
+  </div>
+</div>

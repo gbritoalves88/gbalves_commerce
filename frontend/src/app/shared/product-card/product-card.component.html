@@ -1,0 +1,32 @@
+<!-- shared/product-card/product-card.component.html -->
+<a [routerLink]="['/products', product.slug]" class="product-card">
+  <!-- Imagem -->
+  <div class="product-image">
+    <img [src]="product.image" [alt]="product.name">
+
+    <!-- Desconto -->
+    @if (product.originalPrice) {
+      <span class="discount-badge">
+        -{{ calculateDiscount() }}%
+      </span>
+    }
+  </div>
+
+  <!-- Info -->
+  <div class="product-info">
+    <span class="category">{{ product.category }}</span>
+    <h3>{{ product.name }}</h3>
+
+    <div class="price">
+      @if (product.originalPrice) {
+        <span class="original-price">R$ {{ product.originalPrice.toFixed(2) }}</span>
+      }
+      <span class="current-price">R$ {{ product.price.toFixed(2) }}</span>
+    </div>
+
+    <button mat-fab extended class="buy-btn" (click)="addToCart($event)">
+      <mat-icon>shopping_cart</mat-icon>
+      Comprar
+    </button>
+  </div>
+</a>

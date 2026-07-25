@@ -1,0 +1,234 @@
+// features/cart/cart.component.scss
+.cart-page {
+  padding: 30px 0 60px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+h1 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 32px;
+}
+
+// Layout
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+  align-items: start;
+}
+
+// Itens
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+}
+
+.item-info {
+  flex: 1;
+
+  h3 {
+    font-size: 1rem;
+    color: #333;
+    margin: 0 0 4px 0;
+  }
+
+  .item-price {
+    color: #1a237e;
+    font-weight: 600;
+  }
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  button {
+    background: #f5f5f5;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+
+    &:hover:not(:disabled) {
+      background: #e0e0e0;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    font-weight: 600;
+    min-width: 24px;
+    text-align: center;
+  }
+}
+
+.item-subtotal {
+  font-weight: 700;
+  color: #333;
+  min-width: 100px;
+  text-align: right;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #f44336;
+  }
+}
+
+// Resumo
+.cart-summary {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  position: sticky;
+  top: 20px;
+
+  h2 {
+    font-size: 1.2rem;
+    color: #333;
+    margin: 0 0 20px 0;
+  }
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  color: #666;
+
+  .free-shipping {
+    color: #4caf50;
+    font-weight: 600;
+  }
+}
+
+.summary-divider {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 16px 0;
+}
+
+.summary-row.total {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+.checkout-btn {
+  width: 100%;
+  background: #1a237e !important;
+  color: white !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  margin-bottom: 12px;
+}
+
+.continue-shopping {
+  display: block;
+  text-align: center;
+  color: #1a237e;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Carrinho Vazio
+.empty-cart {
+  text-align: center;
+  padding: 80px 20px;
+
+  mat-icon {
+    font-size: 80px;
+    width: 80px;
+    height: 80px;
+    color: #ccc;
+  }
+
+  h2 {
+    color: #333;
+    margin: 16px 0 8px;
+  }
+
+  p {
+    color: #999;
+    margin-bottom: 24px;
+  }
+
+  a {
+    background: #1a237e !important;
+    color: white !important;
+  }
+}
+
+// Responsivo
+@media (max-width: 768px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cart-item {
+    flex-wrap: wrap;
+    gap: 12px;
+
+    img {
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  .item-subtotal {
+    min-width: auto;
+  }
+
+  .remove-btn {
+    margin-left: auto;
+  }
+}

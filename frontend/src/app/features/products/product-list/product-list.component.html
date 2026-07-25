@@ -1,2 +1,64 @@
 <!-- features/products/product-list/product-list.component.html -->
-<p>Listagem de Produtos</p>
+<section class="product-list-page">
+  <div class="container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <a routerLink="/">Home</a>
+      <mat-icon>chevron_right</mat-icon>
+      <span>Produtos</span>
+      @if (selectedCategory) {
+        <mat-icon>chevron_right</mat-icon>
+        <span>{{ selectedCategory }}</span>
+      }
+    </nav>
+
+    <div class="page-layout">
+      <!-- Sidebar Filtros (Desktop) -->
+      <aside class="sidebar desktop-only">
+        <h3>Categorias</h3>
+        <ul class="category-list">
+          <li
+            [class.active]="!selectedCategory"
+            (click)="selectCategory(null)">
+            Todas
+          </li>
+          @for (category of categories; track category.id) {
+            <li
+              [class.active]="selectedCategory === category.slug"
+              (click)="selectCategory(category.slug)">
+              {{ category.name }}
+            </li>
+          }
+        </ul>
+      </aside>
+
+      <!-- Grid de Produtos -->
+      <div class="products-area">
+        <div class="results-header">
+          <h2>
+            @if (selectedCategory) {
+              {{ selectedCategory | titlecase }}
+            } @else {
+              Todos os Produtos
+            }
+          </h2>
+          <span class="results-count">{{ products.length }} produtos</span>
+        </div>
+
+        @if (products.length > 0) {
+          <div class="products-grid">
+            @for (product of products; track product.id) {
+              <app-product-card [product]="product"></app-product-card>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <mat-icon>inventory_2</mat-icon>
+            <p>Nenhum produto encontrado nesta categoria.</p>
+            <a routerLink="/products" (click)="selectCategory(null)">Ver todos</a>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

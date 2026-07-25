@@ -1,0 +1,26 @@
+<!-- features/profile/my-orders/my-orders.component.html -->
+<div class="my-orders">
+  <h2>Meus Pedidos</h2>
+
+  @if (orders.length > 0) {
+    <div class="orders-list">
+      @for (order of orders; track order.id) {
+        <div class="order-card">
+          <div class="order-info">
+            <strong>Pedido #{{ order.id }}</strong>
+            <span>{{ order.date }}</span>
+          </div>
+          <div class="order-total">{{ order.total }}</div>
+          <span class="status-badge" [style.background]="getStatusColor(order.status)">
+            {{ order.status }}
+          </span>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty">
+      <mat-icon>receipt_long</mat-icon>
+      <p>Nenhum pedido encontrado</p>
+    </div>
+  }
+</div>

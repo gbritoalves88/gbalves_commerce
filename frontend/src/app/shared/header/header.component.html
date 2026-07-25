@@ -1,77 +1,137 @@
 <!-- shared/header/header.component.html -->
-<mat-toolbar class="header">
-  <!-- Logo -->
-  <a class="logo" routerLink="/">
-    <mat-icon>storefront</mat-icon>
-    <span>GBAlves Commerce</span>
-  </a>
+<header class="header-fixed">
+  <!-- Faixa Superior -->
+  <div class="top-bar">
+    <div class="container">
+      <a routerLink="/contact">Fale Conosco</a>
+      <a routerLink="/track-order">Meus Pedidos</a>
+    </div>
+  </div>
 
-  <span class="spacer"></span>
+  <!-- Linha Principal -->
+  <div class="main-row">
+    <div class="container main-row-content">
+      <!-- Menu Hamburguer (Mobile) -->
+      <button mat-icon-button class="hamburger" (click)="toggleMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
 
-  <!-- Menu Desktop -->
-  <nav class="desktop-menu">
-    <a mat-button routerLink="/">Home</a>
+      <!-- Logo -->
+      <a class="logo" routerLink="/">
+        <mat-icon>storefront</mat-icon>
+        <span>GBAlves Commerce</span>
+      </a>
 
-    <button mat-button [matMenuTriggerFor]="productsMenu">
-      Produtos
-      <mat-icon>arrow_drop_down</mat-icon>
-    </button>
+      <!-- Barra de Pesquisa -->
+      <div class="search-bar">
+        <mat-icon>search</mat-icon>
+        <input type="text" placeholder="Buscar produtos...">
+      </div>
+
+      <!-- Perfil e Carrinho -->
+      <div class="actions">
+        <!-- Perfil com dropdown -->
+        <button mat-icon-button [matMenuTriggerFor]="profileMenu" class="action-btn">
+          <mat-icon>person_outline</mat-icon>
+          <span>Perfil</span>
+        </button>
+
+        <!-- Carrinho -->
+        <a routerLink="/cart" class="action-btn cart-btn">
+          <mat-icon>shopping_cart</mat-icon>
+          <span>Carrinho</span>
+          @if (cartItemCount > 0) {
+            <span class="badge">{{ cartItemCount }}</span>
+          }
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu Horizontal (Desktop) -->
+  <nav class="main-nav desktop-only">
+    <div class="container">
+      <a routerLink="/" class="nav-link" routerLinkActive="active">Home</a>
+      @for (category of categories; track category.id) {
+        <a [routerLink]="['/products']"
+           [queryParams]="{category: category.slug}"
+           class="nav-link"
+           routerLinkActive="active">
+          {{ category.name }}
+        </a>
+      }
+    </div>
   </nav>
+</header>
 
-  <span class="spacer"></span>
+<!-- Menu Dropdown do Perfil -->
+<mat-menu #profileMenu="matMenu">
+  @if (isAuthenticated) {
+    <button mat-menu-item routerLink="/profile">
+      <mat-icon>person</mat-icon>
+      <span>Meu Perfil</span>
+    </button>
+    <button mat-menu-item routerLink="/profile/orders">
+      <mat-icon>receipt_long</mat-icon>
+      <span>Meus Pedidos</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item routerLink="/admin">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>Painel Admin</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Sair</span>
+    </button>
+  } @else {
+    <button mat-menu-item routerLink="/login">
+      <mat-icon>login</mat-icon>
+      <span>Entrar</span>
+    </button>
+  }
+</mat-menu>
 
-  <!-- Ações -->
-  <button mat-icon-button aria-label="Buscar">
-    <mat-icon>search</mat-icon>
-  </button>
+<!-- Menu Lateral Mobile -->
+@if (menuOpen) {
+  <div class="mobile-overlay" (click)="closeMenu()"></div>
+  <nav class="mobile-menu" [class.open]="menuOpen">
+    <div class="mobile-menu-header">
+      <span>🛍️ Menu</span>
+      <button mat-icon-button (click)="closeMenu()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
 
-  <button mat-icon-button routerLink="/cart" aria-label="Carrinho">
-    <mat-icon>shopping_cart</mat-icon>
-    @if (cartItemCount > 0) {
-      <span class="badge">{{ cartItemCount }}</span>
+    <a routerLink="/" class="mobile-link" (click)="closeMenu()">
+      <mat-icon>home</mat-icon>
+      Home
+    </a>
+
+    @for (category of categories; track category.id) {
+      <a [routerLink]="['/products']"
+         [queryParams]="{category: category.slug}"
+         class="mobile-link"
+         (click)="closeMenu()">
+        <mat-icon>category</mat-icon>
+        {{ category.name }}
+      </a>
     }
-  </button>
 
-  <!-- Menu Mobile -->
-  <button mat-icon-button [matMenuTriggerFor]="mobileMenu" class="mobile-btn">
-    <mat-icon>menu</mat-icon>
-  </button>
-</mat-toolbar>
-
-<!-- Dropdown Produtos (Desktop) -->
-<mat-menu #productsMenu="matMenu">
-  @for (category of categories; track category.id) {
-    <button mat-menu-item [routerLink]="['/products']"
-            [queryParams]="{category: category.slug}">
-      <mat-icon>chevron_right</mat-icon>
-      <span>{{ category.name }}</span>
-    </button>
-  }
-</mat-menu>
-
-<!-- Menu Mobile Completo -->
-<mat-menu #mobileMenu="matMenu">
-  <button mat-menu-item routerLink="/">
-    <mat-icon>home</mat-icon>
-    <span>Home</span>
-  </button>
-
-  <mat-divider></mat-divider>
-
-  <span class="menu-label">Categorias</span>
-
-  @for (category of categories; track category.id) {
-    <button mat-menu-item [routerLink]="['/products']"
-            [queryParams]="{category: category.slug}">
-      <mat-icon>category</mat-icon>
-      <span>{{ category.name }}</span>
-    </button>
-  }
-
-  <mat-divider></mat-divider>
-
-  <button mat-menu-item routerLink="/cart">
-    <mat-icon>shopping_cart</mat-icon>
-    <span>Carrinho @if (cartItemCount > 0) { ({{ cartItemCount }}) }</span>
-  </button>
-</mat-menu>
+    <div class="mobile-menu-footer">
+      <a routerLink="/profile" class="mobile-link" (click)="closeMenu()">
+        <mat-icon>person_outline</mat-icon>
+        Meu Perfil
+      </a>
+      <a routerLink="/track-order" class="mobile-link" (click)="closeMenu()">
+        <mat-icon>receipt_long</mat-icon>
+        Meus Pedidos
+      </a>
+      <a routerLink="/contact" class="mobile-link" (click)="closeMenu()">
+        <mat-icon>chat</mat-icon>
+        Fale Conosco
+      </a>
+    </div>
+  </nav>
+}

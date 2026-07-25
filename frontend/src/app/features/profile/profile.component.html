@@ -1,0 +1,68 @@
+<!-- features/profile/profile.component.html -->
+<section class="profile-page">
+  <div class="container">
+    <h1>Meu Perfil</h1>
+
+    <div class="profile-layout">
+      <!-- Sidebar -->
+      <aside class="profile-sidebar">
+        <div class="user-avatar">
+          <mat-icon>person</mat-icon>
+        </div>
+        <h3>{{ user.name }}</h3>
+        <p>{{ user.email }}</p>
+
+        <nav class="profile-nav">
+          <a routerLink="/profile" class="nav-item"
+             [class.active]="activeTab === 'info'">
+            <mat-icon>person_outline</mat-icon>
+            Dados Pessoais
+          </a>
+          <a routerLink="/profile/orders" class="nav-item"
+             [class.active]="activeTab === 'orders'">
+            <mat-icon>receipt_long</mat-icon>
+            Meus Pedidos
+          </a>
+          <a routerLink="/profile/addresses" class="nav-item">
+            <mat-icon>location_on</mat-icon>
+            Endereços
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Conteúdo -->
+      <div class="profile-content">
+        <div class="content-card">
+          <h2>Dados Pessoais</h2>
+
+          <form (ngSubmit)="saveProfile()">
+            <mat-form-field appearance="outline">
+              <mat-label>Nome completo</mat-label>
+              <input matInput [(ngModel)]="user.name" name="name">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" [(ngModel)]="user.email" name="email">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Telefone</mat-label>
+              <input matInput [(ngModel)]="user.phone" name="phone">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>CPF</mat-label>
+              <input matInput [(ngModel)]="user.cpf" name="cpf">
+            </mat-form-field>
+
+            <button mat-flat-button class="save-btn" type="submit">
+              <mat-icon>save</mat-icon>
+              Salvar Alterações
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,45 @@
+// features/admin/orders/orders.component.scss
+.orders-admin {
+  h1 {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 0;
+  }
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+
+  p {
+    color: #999;
+    margin: 4px 0 0;
+  }
+}
+
+.table-wrapper {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+th {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+td {
+  color: #333;
+}
