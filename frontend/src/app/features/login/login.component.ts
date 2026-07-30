@@ -44,23 +44,21 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     this.error = '';
-
     if (!this.email || !this.password) {
       this.error = 'Preencha todos os campos.';
       return;
     }
 
-    const success = this.authService.login(this.email, this.password);
-
-    if (success) {
-      this.router.navigateByUrl(this.returnUrl);
-    } else {
-      this.error = 'Email ou senha inválidos.';
-    }
+    this.authService.login(this.email, this.password).subscribe({
+      next: () => this.router.navigateByUrl(this.returnUrl),
+      error: () => this.error = 'Email ou senha inválidos.'
+    });
   }
 
   quickLogin(): void {
-    this.authService.login('admin@gbalves.com', 'admin123');
-    this.router.navigateByUrl(this.returnUrl);
+    this.authService.login('admin@gbalves.com', 'admin123').subscribe({
+      next: () => this.router.navigateByUrl(this.returnUrl),
+      error: () => this.error = 'Erro ao fazer login rápido.'
+    });
   }
 }

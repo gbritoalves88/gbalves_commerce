@@ -1,38 +1,55 @@
 // shared/services/auth.service.ts
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from '../services/api.service';
+import { Observable, tap } from 'rxjs';
+import { LoginRequest, LoginResponse } from '../models/auth';
 
-@Injectable({
-  providedIn: 'root'
-})
+
+@Injectable({ providedIn: 'root' })
 export class AuthService {
+  private api = inject(ApiService);
+  private router = inject(Router);
+
   isAuthenticated = signal<boolean>(this.checkAuth());
+  currentUser = signal<LoginResponse | null>(this.getUser());
 
-  private mockUser = {
-    email: 'admin@gbalves.com',
-    password: 'admin123'
-  };
-
-  constructor(private router: Router) {}
-
-  login(email: string, password: string): boolean {
-    if (email === this.mockUser.email && password === this.mockUser.password) {
-      localStorage.setItem('auth_token', 'mock-jwt-token');
-      localStorage.setItem('is_admin', 'true');
-      this.isAuthenticated.set(true);
-      // Não redireciona mais aqui, deixa o componente decidir
-      return true;
-    }
-    return false;
+  login(email: string, password: string): Observable<LoginResponse> {
+    return this.api.post<LoginResponse>('Auth/login', {
+      email,
+      senha: password
+    } as LoginRequest).pipe(
+      tap(response => {
+        localStorage.setItem('auth_token', response.token);
+        localStorage.setItem('user', JSON.stringify(response));
+        this.isAuthenticated.set(true);
+        this.currentUser.set(response);
+      })
+    );
   }
 
   logout(): void {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('user');
     this.isAuthenticated.set(false);
-    this.router.navigate(['/admin/login']);
+    this.currentUser.set(null);
+    this.router.navigate(['/']);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('auth_token');
+  }
+
+  isAdmin(): boolean {
+    return this.currentUser()?.nivelAcesso === 'admin';
   }
 
   private checkAuth(): boolean {
     return !!localStorage.getItem('auth_token');
+  }
+
+  private getUser(): LoginResponse | null {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
   }
 }

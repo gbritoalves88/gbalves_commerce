@@ -1,0 +1,76 @@
+<!-- features/admin/pedidos/pedido-detalhes/pedido-detalhes.component.html -->
+<div class="pedido-detalhes">
+  <div class="page-header">
+    <a routerLink="/admin/pedidos" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      Voltar
+    </a>
+  </div>
+
+  @if (pedido) {
+    <div class="detail-grid">
+      <!-- Info Principal -->
+      <div class="detail-card">
+        <div class="card-header">
+          <h2>Pedido #{{ pedido.numeroPedido }}</h2>
+          <span class="status-badge" [style.background]="getStatusColor(pedido.status)">
+            {{ getStatusLabel(pedido.status) }}
+          </span>
+        </div>
+
+        <div class="info-row">
+          <span>Data:</span>
+          <strong>{{ pedido.criadoEm | date:'dd/MM/yyyy HH:mm' }}</strong>
+        </div>
+        <div class="info-row">
+          <span>Pagamento:</span>
+          <strong>{{ pedido.formaPagamento === 'pix' ? 'Pix' : 'Cartão' }}</strong>
+        </div>
+        <div class="info-row">
+          <span>Total:</span>
+          <strong class="total-value">R$ {{ pedido.total.toFixed(2) }}</strong>
+        </div>
+        <div class="info-row">
+          <span>Frete:</span>
+          <strong>R$ {{ pedido.frete.toFixed(2) }}</strong>
+        </div>
+
+        <!-- Atualizar Status -->
+        <div class="status-update">
+          <mat-form-field appearance="outline">
+            <mat-label>Atualizar Status</mat-label>
+            <mat-select [value]="pedido.status"
+                        (selectionChange)="atualizarStatus($event.value)">
+              @for (status of statusList; track status) {
+                <mat-option [value]="status">
+                  {{ status }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Dados do Cliente -->
+      <div class="detail-card">
+        <h3>👤 Dados do Cliente</h3>
+        <p><strong>Nome:</strong> {{ pedido.clienteNome }}</p>
+      </div>
+
+      <!-- Resumo -->
+      <div class="detail-card">
+        <h3>📦 Resumo</h3>
+        <p><strong>Subtotal:</strong> R$ {{ pedido.subtotal.toFixed(2) }}</p>
+        <p><strong>Frete:</strong> R$ {{ pedido.frete.toFixed(2) }}</p>
+        <p><strong>Total:</strong> R$ {{ pedido.total.toFixed(2) }}</p>
+        <p><strong>Forma de Pagamento:</strong> {{ pedido.formaPagamento }}</p>
+      </div>
+    </div>
+  } @else {
+    <div class="not-found">
+      <mat-icon>error_outline</mat-icon>
+      <h2>Pedido não encontrado</h2>
+      <a routerLink="/admin/pedidos" mat-button>Voltar</a>
+    </div>
+  }
+</div>

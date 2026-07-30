@@ -1,0 +1,90 @@
+<!-- features/admin/produtos/produto-form/produto-form.component.html -->
+<div class="produto-form">
+  <div class="page-header">
+    <div>
+      <a routerLink="/admin/produtos" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        Voltar
+      </a>
+      <h1>{{ isEdit ? 'Editar Produto' : 'Novo Produto' }}</h1>
+    </div>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" class="form-card">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-2">
+        <mat-label>Nome do Produto</mat-label>
+        <input matInput [(ngModel)]="product.nome" name="nome"
+               (blur)="generateSlug()" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Categoria</mat-label>
+          <mat-select [(ngModel)]="product.categoriaId" name="categoriaId" required>
+            @for (cat of categories(); track cat.id) {
+              <mat-option [value]="cat.id">{{ cat.nome }}</mat-option>
+            }
+          </mat-select>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Slug</mat-label>
+      <input matInput [(ngModel)]="product.slug" name="slug" required>
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Preço (R$)</mat-label>
+        <input matInput type="number" [(ngModel)]="product.preco" name="preco"
+               min="0" step="0.01" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Preço Original (opcional)</mat-label>
+        <input matInput type="number" [(ngModel)]="product.precoOriginal"
+               name="precoOriginal" min="0" step="0.01">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Estoque</mat-label>
+        <input matInput type="number" [(ngModel)]="product.estoque" name="estoque"
+               min="0" required>
+      </mat-form-field>
+    </div>
+
+    <!-- Upload de Imagem -->
+    <div class="upload-area">
+      <input type="file" #fileInput (change)="uploadImagem($event)" accept="image/*" hidden>
+      <button type="button" mat-stroked-button (click)="fileInput.click()" [disabled]="uploading">
+        <mat-icon>cloud_upload</mat-icon>
+        {{ uploading ? 'Enviando...' : 'Upload Imagem' }}
+      </button>
+      @if (product.imagemUrl) {
+        <img [src]="product.imagemUrl" alt="Preview" class="img-preview">
+      }
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>URL da Imagem</mat-label>
+      <input matInput [(ngModel)]="product.imagemUrl" name="imagemUrl">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descrição</mat-label>
+      <textarea matInput [(ngModel)]="product.descricao" name="descricao" rows="3"></textarea>
+    </mat-form-field>
+
+    <mat-slide-toggle [(ngModel)]="product.destaque" name="destaque">
+      Destaque na Home
+    </mat-slide-toggle>
+
+    <div class="form-actions">
+      <button mat-stroked-button type="button" routerLink="/admin/produtos">Cancelar</button>
+      <button mat-flat-button type="submit" class="save-btn">
+        <mat-icon>save</mat-icon>
+        {{ isEdit ? 'Atualizar' : 'Cadastrar' }}
+      </button>
+    </div>
+  </form>
+</div>

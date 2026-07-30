@@ -1,5 +1,5 @@
 <!-- shared/header/header.component.html -->
-<header class="header-fixed">
+<header class="header-fixed" [class.scrolled]="scrolled">
   <!-- Faixa Superior -->
   <div class="top-bar">
     <div class="container">
@@ -11,33 +11,30 @@
   <!-- Linha Principal -->
   <div class="main-row">
     <div class="container main-row-content">
-      <!-- Menu Hamburguer (Mobile) -->
       <button mat-icon-button class="hamburger" (click)="toggleMenu()">
         <mat-icon>menu</mat-icon>
       </button>
 
-      <!-- Logo -->
       <a class="logo" routerLink="/">
-        <mat-icon>storefront</mat-icon>
-        <span>GBAlves Commerce</span>
+        @if (storeLogo) {
+          <img [src]="storeLogo" [alt]="storeName" class="logo-img">
+        }
+        @if (storeName) {
+          <span>{{ storeName }}</span>
+        }
       </a>
 
-      <!-- Barra de Pesquisa -->
       <div class="search-bar">
         <mat-icon>search</mat-icon>
         <input type="text" placeholder="Buscar produtos...">
       </div>
 
-      <!-- Perfil e Carrinho -->
       <div class="actions">
-        <!-- Perfil com dropdown -->
         <button mat-icon-button [matMenuTriggerFor]="profileMenu" class="action-btn">
           <mat-icon>person_outline</mat-icon>
           <span>Perfil</span>
         </button>
-
-        <!-- Carrinho -->
-        <a routerLink="/cart" class="action-btn cart-btn">
+        <a routerLink="/carrinho" class="action-btn carrinho-btn">
           <mat-icon>shopping_cart</mat-icon>
           <span>Carrinho</span>
           @if (cartItemCount > 0) {
@@ -49,16 +46,29 @@
   </div>
 
   <!-- Menu Horizontal (Desktop) -->
-  <nav class="main-nav desktop-only">
+  <nav class="main-nav desktop-only" [style.background]="corPrimaria">
     <div class="container">
       <a routerLink="/" class="nav-link" routerLinkActive="active">Home</a>
-      @for (category of categories; track category.id) {
-        <a [routerLink]="['/products']"
-           [queryParams]="{category: category.slug}"
-           class="nav-link"
-           routerLinkActive="active">
-          {{ category.name }}
-        </a>
+
+      @for (menu of menus; track menu.id) {
+        @if (menu.itens.length > 0) {
+          <button mat-button [matMenuTriggerFor]="menuDrop" class="nav-link">
+            {{ menu.nome }}
+            <mat-icon>arrow_drop_down</mat-icon>
+          </button>
+          <mat-menu #menuDrop="matMenu">
+            @for (item of menu.itens; track item.id) {
+              <button mat-menu-item (click)="navegar(item.url || '/produtos')">
+                <mat-icon>{{ item.icone || 'category' }}</mat-icon>
+                <span>{{ item.nome }}</span>
+              </button>
+            }
+          </mat-menu>
+        } @else {
+          <a [routerLink]="['/produtos']" class="nav-link">
+            {{ menu.nome }}
+          </a>
+        }
       }
     </div>
   </nav>
@@ -67,11 +77,11 @@
 <!-- Menu Dropdown do Perfil -->
 <mat-menu #profileMenu="matMenu">
   @if (isAuthenticated) {
-    <button mat-menu-item routerLink="/profile">
+    <button mat-menu-item routerLink="/perfil">
       <mat-icon>person</mat-icon>
       <span>Meu Perfil</span>
     </button>
-    <button mat-menu-item routerLink="/profile/orders">
+    <button mat-menu-item routerLink="/perfil/pedidos">
       <mat-icon>receipt_long</mat-icon>
       <span>Meus Pedidos</span>
     </button>
@@ -97,7 +107,7 @@
 @if (menuOpen) {
   <div class="mobile-overlay" (click)="closeMenu()"></div>
   <nav class="mobile-menu" [class.open]="menuOpen">
-    <div class="mobile-menu-header">
+    <div class="mobile-menu-header" [style.background]="corPrimaria">
       <span>🛍️ Menu</span>
       <button mat-icon-button (click)="closeMenu()">
         <mat-icon>close</mat-icon>
@@ -109,18 +119,23 @@
       Home
     </a>
 
-    @for (category of categories; track category.id) {
-      <a [routerLink]="['/products']"
-         [queryParams]="{category: category.slug}"
-         class="mobile-link"
-         (click)="closeMenu()">
-        <mat-icon>category</mat-icon>
-        {{ category.name }}
-      </a>
+    @for (menu of menus; track menu.id) {
+      <div class="mobile-link" style="font-weight: 700;">
+        <mat-icon>folder</mat-icon>
+        {{ menu.nome }}
+      </div>
+      @for (item of menu.itens; track item.id) {
+        <a [routerLink]="[item.url || '/produtos']"
+           class="mobile-link" style="padding-left: 40px;"
+           (click)="closeMenu()">
+          <mat-icon>chevron_right</mat-icon>
+          {{ item.nome }}
+        </a>
+      }
     }
 
     <div class="mobile-menu-footer">
-      <a routerLink="/profile" class="mobile-link" (click)="closeMenu()">
+      <a routerLink="/perfil" class="mobile-link" (click)="closeMenu()">
         <mat-icon>person_outline</mat-icon>
         Meu Perfil
       </a>

@@ -1,0 +1,166 @@
+// features/produtos/produto-lista/produto-lista.component.scss
+.produto-lista-page {
+  padding: 30px 0 60px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+// Breadcrumb
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 24px;
+  font-size: 0.85rem;
+
+  a {
+    color: #666;
+    text-decoration: none;
+
+    &:hover {
+      color: #1a237e;
+    }
+  }
+
+  span {
+    color: #333;
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #999;
+  }
+}
+
+// Layout
+.page-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 32px;
+}
+
+// Sidebar
+.sidebar {
+  h3 {
+    font-size: 1.1rem;
+    color: #333;
+    margin: 0 0 16px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #1a237e;
+  }
+}
+
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    padding: 10px 16px;
+    cursor: pointer;
+    color: #666;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-weight: 500;
+
+    &:hover {
+      background: #e8eaf6;
+      color: #1a237e;
+    }
+
+    &.active {
+      background: #1a237e;
+      color: white;
+    }
+  }
+}
+
+// Área de Produtos
+.produtos-area {
+  min-height: 400px;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 1.6rem;
+    color: #333;
+    margin: 0;
+    text-transform: capitalize;
+  }
+
+  .results-count {
+    color: #999;
+    font-size: 0.9rem;
+  }
+}
+
+.produtos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+// Estado vazio
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+  }
+
+  p {
+    font-size: 1.1rem;
+    margin: 16px 0;
+  }
+
+  a {
+    color: #1a237e;
+    font-weight: 600;
+    text-decoration: none;
+  }
+}
+
+// Responsivo
+@media (max-width: 768px) {
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .produtos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .results-header h2 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .produtos-grid {
+    grid-template-columns: 1fr;
+  }
+}

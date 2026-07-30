@@ -15,8 +15,8 @@
       <div class="footer-col">
         <h4>Links Úteis</h4>
         <a routerLink="/">Home</a>
-        <a routerLink="/products">Produtos</a>
-        <a routerLink="/cart">Carrinho</a>
+        <a routerLink="/produtos">Produtos</a>
+        <a routerLink="/carrinho">Carrinho</a>
         <a routerLink="/track-order">Meus Pedidos</a>
       </div>
 
@@ -32,15 +32,20 @@
       <div class="footer-col">
         <h4>Redes Sociais</h4>
         <div class="social-links">
-          <a href="#" target="_blank" aria-label="Instagram">
-            <mat-icon>camera</mat-icon>
-          </a>
+          @if (instagram) {
+            <a [href]="instagram" target="_blank" aria-label="Instagram">
+              <mat-icon>camera</mat-icon>
+            </a>
+          }
           <a href="#" target="_blank" aria-label="WhatsApp">
             <mat-icon>chat</mat-icon>
           </a>
-          <a href="#" target="_blank" aria-label="Facebook">
-            <mat-icon>facebook</mat-icon>
-          </a>
+          @if (whatsapp) {
+            <div class="whatsapp-btn">
+              <mat-icon>whatsapp</mat-icon>
+              <span>{{ whatsapp }}</span>
+            </div>
+          }
         </div>
         <div class="whatsapp-btn">
           <mat-icon>whatsapp</mat-icon>

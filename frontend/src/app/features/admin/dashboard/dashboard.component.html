@@ -2,49 +2,51 @@
 <div class="dashboard">
   <h1>Dashboard</h1>
 
-  <!-- Cards -->
-  <div class="stats-grid">
-    @for (stat of stats; track stat.label) {
-      <div class="stat-card">
-        <div class="stat-icon" [style.background]="stat.color">
-          <mat-icon>{{ stat.icon }}</mat-icon>
+  @if (dados()) {
+    <!-- Cards -->
+    <div class="stats-grid">
+      @for (stat of stats(); track stat.label) {
+        <div class="stat-card">
+          <div class="stat-icon" [style.background]="stat.color">
+            <mat-icon>{{ stat.icon }}</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stat.value }}</span>
+            <span class="stat-label">{{ stat.label }}</span>
+          </div>
         </div>
-        <div class="stat-info">
-          <span class="stat-value">{{ stat.value }}</span>
-          <span class="stat-label">{{ stat.label }}</span>
-        </div>
-      </div>
-    }
-  </div>
-
-  <!-- Últimos Pedidos -->
-  <div class="recent-orders">
-    <h2>Últimos Pedidos</h2>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Pedido</th>
-            <th>Cliente</th>
-            <th>Total</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (order of recentOrders; track order.id) {
-            <tr>
-              <td>{{ order.id }}</td>
-              <td>{{ order.customer }}</td>
-              <td>{{ order.total }}</td>
-              <td>
-                <span class="status-badge" [style.background]="getStatusColor(order.status)">
-                  {{ order.status }}
-                </span>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+      }
     </div>
-  </div>
+
+    <!-- Últimos Pedidos -->
+    <div class="recent-pedidos">
+      <h2>Últimos Pedidos</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Pedido</th>
+              <th>Cliente</th>
+              <th>Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (pedido of dados()!.ultimosPedidos; track pedido.id) {
+              <tr>
+                <td>#{{ pedido.numeroPedido }}</td>
+                <td>{{ pedido.clienteNome }}</td>
+                <td>R$ {{ pedido.total.toFixed(2) }}</td>
+                <td>
+                  <span class="status-badge" [style.background]="getStatusColor(pedido.status)">
+                    {{ pedido.status }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
 </div>

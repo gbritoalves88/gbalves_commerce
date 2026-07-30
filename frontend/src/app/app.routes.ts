@@ -1,53 +1,59 @@
 // app/app.routes.ts
 import { Routes } from '@angular/router';
 import { HomeComponent } from './features/home/home.component';
-import { ProductListComponent } from './features/products/product-list/product-list.component';
-import { ProductDetailComponent } from './features/products/product-detail/product-detail.component';
-import { CartComponent } from './features/cart/cart.component';
+import { ProdutoListaComponent } from './features/produtos/produto-lista/produto-lista.component';
+import { ProdutoDetalheComponent } from './features/produtos/produto-detalhe/produto-detalhe.component';
+import { CarrinhoComponent } from './features/carrinho/carrinho.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
-import { OrderConfirmedComponent } from './features/order-confirmed/order-confirmed.component';
+import { PedidoConfirmadoComponent } from './features/pedido-confirmado/pedido-confirmado.component';
 import { LoginComponent } from './features/login/login.component';
 import { AdminLayoutComponent } from './features/admin/admin-layout/admin-layout.component';
 import { DashboardComponent } from './features/admin/dashboard/dashboard.component';
-import { ProductsComponent } from './features/admin/products/products.component';
-import { ProductFormComponent } from './features/admin/products/product-form/product-form.component';
-import { CategoriesComponent } from './features/admin/categories/categories.component';
-import { CategoryFormComponent } from './features/admin/categories/category-form/category-form.component';
-import { OrdersComponent } from './features/admin/orders/orders.component';
-import { OrderDetailComponent } from './features/admin/orders/order-detail/order-detail.component';
-import { ProfileComponent } from './features/profile/profile.component';
-import { MyOrdersComponent } from './features/profile/my-orders/my-orders.component';
+import { ProdutosComponent } from './features/admin/produtos/produtos.component';
+import { ProductFormComponent } from './features/admin/produtos/produtos-form/produto-form.component';
+import { CategoriasComponent } from './features/admin/categorias/categorias.component';
+import { CategoriaFormComponent } from './features/admin/categorias/categoria-form/categoria-form.component';
+import { PedidosComponent } from './features/admin/pedidos/pedidos.component';
+import { OrderDetailComponent } from './features/admin/pedidos/pedidos-detalhes/pedido-detalhes.component';
+import { PerfilComponent } from './features/perfil/perfil.component';
+import { MeusPedidosComponent } from './features/perfil/meus-pedidos/meus-pedidos.component';
+import { ConfiguracoesComponent } from './features/admin/configuracoes/configuracoes.component';
 import { authGuard } from './shared/guards/auth.guard';
-
+import { BannersComponent } from './features/admin/banners/banners.component';
+import { BannerFormComponent } from './features/admin/banners/banner-form/banner-form.component';
+import { MenusComponent } from './features/admin/menus/menus.component';
 
 export const routes: Routes = [
-  // Loja (público)
+  // Loja
   { path: '', component: HomeComponent },
-  { path: 'products', component: ProductListComponent },
-  { path: 'products/:slug', component: ProductDetailComponent },
-  { path: 'cart', component: CartComponent },
+  { path: 'produtos', component: ProdutoListaComponent },
+  { path: 'produtos/:slug', component: ProdutoDetalheComponent },
+  { path: 'carrinho', component: CarrinhoComponent },
   { path: 'checkout', component: CheckoutComponent, canActivate: [authGuard] },
-  { path: 'order-confirmed/:id', component: OrderConfirmedComponent },
-  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
-  { path: 'profile/orders', component: MyOrdersComponent, canActivate: [authGuard] },
-
-  // Login
+  { path: 'pedido-confirmado/:id', component: PedidoConfirmadoComponent },
+  { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] },
+  { path: 'perfil/pedidos', component: MeusPedidosComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginComponent },
 
-  // Admin (com sidebar)
+  // Admin
   {
     path: 'admin',
     component: AdminLayoutComponent,
     children: [
-      { path: '', component: DashboardComponent, canActivate: [authGuard]  },
-      { path: 'products', component: ProductsComponent,canActivate: [authGuard]  },
-      { path: 'products/new', component: ProductFormComponent,canActivate: [authGuard]  },
-      { path: 'products/edit/:id', component: ProductFormComponent,canActivate: [authGuard]  },
-      { path: 'categories', component: CategoriesComponent,canActivate: [authGuard]  },
-      { path: 'categories/new', component: CategoryFormComponent,canActivate: [authGuard]  },
-      { path: 'categories/edit/:id', component: CategoryFormComponent,canActivate: [authGuard]  },
-      { path: 'orders', component: OrdersComponent,canActivate: [authGuard]  },
-      { path: 'orders/:id', component: OrderDetailComponent,canActivate: [authGuard]  }
+      { path: '', component: DashboardComponent },
+      { path: 'produtos', component: ProdutosComponent },
+      { path: 'produtos/new', component: ProductFormComponent },
+      { path: 'produtos/edit/:id', component: ProductFormComponent },
+      { path: 'categorias', component: CategoriasComponent },
+      { path: 'categorias/new', component: CategoriaFormComponent },
+      { path: 'categorias/edit/:id', component: CategoriaFormComponent },
+      { path: 'pedidos', component: PedidosComponent },
+      { path: 'pedidos/:id', component: OrderDetailComponent },
+      { path: 'configuracoes', component: ConfiguracoesComponent },
+      { path: 'banners', component: BannersComponent },
+      { path: 'banners/new', component: BannerFormComponent },
+      { path: 'banners/edit/:id', component: BannerFormComponent },
+      { path: 'menus', component: MenusComponent },
     ]
   }
 ];

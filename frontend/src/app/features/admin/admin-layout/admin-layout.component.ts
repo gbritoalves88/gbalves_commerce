@@ -28,9 +28,12 @@ export class AdminLayoutComponent {
 
   menuItems = [
     { label: 'Dashboard', icon: 'dashboard', path: '/admin' },
-    { label: 'Produtos', icon: 'inventory_2', path: '/admin/products' },
-    { label: 'Categorias', icon: 'category', path: '/admin/categories' },
-    { label: 'Pedidos', icon: 'receipt_long', path: '/admin/orders' },
-    { label: 'Configurações', icon: 'settings', path: '/admin/settings' },
+    { label: 'Produtos', icon: 'inventory_2', path: '/admin/produtos' },
+    { label: 'Categorias', icon: 'category', path: '/admin/categorias' },
+    { label: 'Pedidos', icon: 'receipt_long', path: '/admin/pedidos' },
+    { label: 'Banners', icon: 'image', path: '/admin/banners' },
+    { label: 'Menus', icon: 'menu', path: '/admin/menus' },
+    { label: 'Configurações', icon: 'settings', path: '/admin/configuracoes' },
+
   ];
 }

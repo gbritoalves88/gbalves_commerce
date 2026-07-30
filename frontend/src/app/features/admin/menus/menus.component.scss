@@ -1,0 +1,48 @@
+// features/admin/menus/menus.component.scss
+.menus-admin {
+  h1 { font-size: 1.8rem; color: #333; margin: 0; }
+}
+
+.page-header { margin-bottom: 32px; }
+
+.section {
+  margin-bottom: 32px;
+  h2 {
+    font-size: 1.2rem; color: #333; margin: 0 0 16px 0;
+    padding-bottom: 8px; border-bottom: 1px solid #e0e0e0;
+  }
+}
+
+.add-form {
+  display: flex; gap: 16px; align-items: flex-start;
+  background: white; padding: 20px; border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); flex-wrap: wrap;
+  mat-form-field { flex: 1; min-width: 180px; }
+  button {
+    height: 56px; background: #1a237e !important;
+    color: white !important; border-radius: 8px !important; white-space: nowrap;
+  }
+}
+
+.menu-list {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  button {
+    padding: 8px 20px; border-radius: 8px;
+    &.active { background: #1a237e; color: white; }
+  }
+}
+
+.table-wrapper {
+  background: white; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); margin-top: 20px;
+}
+
+th { font-weight: 600; color: #666; font-size: 0.85rem; }
+td { color: #333; }
+
+@media (max-width: 768px) {
+  .add-form { flex-direction: column;
+    mat-form-field { min-width: 100%; }
+    button { width: 100%; }
+  }
+}

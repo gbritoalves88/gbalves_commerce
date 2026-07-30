@@ -1,0 +1,54 @@
+// features/admin/banners/banner-form/banner-form.component.scss
+.banner-form { max-width: 800px; }
+
+.page-header {
+  margin-bottom: 32px;
+  h1 { font-size: 1.8rem; color: #333; margin: 8px 0 0; }
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #666;
+  text-decoration: none;
+  font-size: 0.9rem;
+  &:hover { color: #1a237e; }
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+}
+
+.form-card {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.upload-area {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.img-preview {
+  width: 80px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+mat-form-field { width: 100%; }
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  .save-btn {
+    background: var(--cor-primaria);
+    color: white !important;
+    border-radius: 8px !important;
+  }
+}
