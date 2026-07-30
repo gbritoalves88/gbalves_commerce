@@ -1,8 +1,11 @@
-// app/app.component.ts
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
+import { ConfigService } from './shared/services/config.service';
+import { Title, Meta } from '@angular/platform-browser';
+import { filter, map } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +14,27 @@ import { FooterComponent } from './shared/footer/footer.component';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  private router = inject(Router);
+  private configService = inject(ConfigService);
+  private title = inject(Title);
+  private meta = inject(Meta);
+
+  isLoginPage = toSignal(
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd),
+      map(() => this.router.url === '/login' || this.router.url.startsWith('/admin'))
+    ),
+    { initialValue: false }
+  );
+
+  ngOnInit(): void {
+    this.configService.loadConfig().subscribe(config => {
+      document.documentElement.style.setProperty('--cor-primaria', config.corPrimaria);
+      document.documentElement.style.setProperty('--cor-secundaria', config.corSecundaria);
+
+      if (config.seoTitulo) this.title.setTitle(config.seoTitulo);
+      if (config.seoDescricao) this.meta.updateTag({ name: 'description', content: config.seoDescricao });
+    });
+  }
+}

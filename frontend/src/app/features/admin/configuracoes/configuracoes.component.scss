@@ -1,0 +1,75 @@
+// features/admin/configuracoes/configuracoes.component.scss
+.configuracoes {
+  max-width: 800px;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.mensagem-sucesso {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.form-card {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  h2 {
+    font-size: 1.1rem;
+    color: #333;
+    margin: 24px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e0e0e0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+
+  .flex-1 {
+    flex: 1;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.form-actions {
+  margin-top: 24px;
+}
+
+.save-btn {
+  background: #1a237e !important;
+  color: white !important;
+  border-radius: 8px !important;
+  padding: 8px 24px !important;
+}
+
+.upload-area {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.logo-preview {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}

@@ -1,29 +1,36 @@
 // features/home/home.component.ts
-import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import Swiper from 'swiper';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
-import { MOCK_BANNERS } from '../../shared/models/mock-banners';
-import { MOCK_PRODUCTS } from '../../shared/models/mock-data';
-import { ProductCardComponent } from '../../shared/product-card/product-card.component';
+import { BannerService } from '../../shared/services/banner.service';
+import { ProdutoService } from '../../shared/services/produto.service';
+import { ProdutoCarrinhoComponent } from '../../shared/produto-card/produto-card.component';
+
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, MatIconModule, ProductCardComponent],
+  imports: [RouterModule, MatIconModule, ProdutoCarrinhoComponent],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrl: './home.component.scss',
 })
-export class HomeComponent implements AfterViewInit, OnDestroy {
-  banners = MOCK_BANNERS;
-  featuredProducts = MOCK_PRODUCTS.filter(p => p.featured);
+export class HomeComponent implements AfterViewInit, OnInit {
+  private bannerService = inject(BannerService);
+  private productService = inject(ProdutoService);
+  featuredProducts = this.productService.destaques;
+
+  banners = this.bannerService.banners;
   private swiper: Swiper | null = null;
 
+  ngOnInit(): void {
+    this.bannerService.loadBanners().subscribe();
+    this.productService.loadDestaques().subscribe();
+  }
+
   ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.initSwiper();
-    }, 0);
+    setTimeout(() => this.initSwiper(), 100);
   }
 
   ngOnDestroy(): void {

@@ -1,0 +1,68 @@
+<!-- features/admin/banners/banner-form/banner-form.component.html -->
+<div class="banner-form">
+  <div class="page-header">
+    <div>
+      <a routerLink="/admin/banners" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        Voltar
+      </a>
+      <h1>{{ isEdit ? 'Editar Banner' : 'Novo Banner' }}</h1>
+    </div>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" class="form-card">
+    <mat-form-field appearance="outline">
+      <mat-label>Título</mat-label>
+      <input matInput [(ngModel)]="banner.titulo" name="titulo" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Subtítulo</mat-label>
+      <input matInput [(ngModel)]="banner.subtitulo" name="subtitulo">
+    </mat-form-field>
+
+    <!-- Upload de Imagem -->
+    <div class="upload-area">
+      <input type="file" #fileInput (change)="uploadImagem($event)" accept="image/*" hidden>
+      <button type="button" mat-stroked-button (click)="fileInput.click()" [disabled]="uploading">
+        <mat-icon>cloud_upload</mat-icon>
+        {{ uploading ? 'Enviando...' : 'Upload Imagem' }}
+      </button>
+      @if (banner.imagemUrl) {
+        <img [src]="banner.imagemUrl" alt="Preview" class="img-preview">
+      }
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>URL da Imagem</mat-label>
+      <input matInput [(ngModel)]="banner.imagemUrl" name="imagemUrl" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Link</mat-label>
+      <input matInput [(ngModel)]="banner.link" name="link" placeholder="/produtos">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Texto do Botão</mat-label>
+      <input matInput [(ngModel)]="banner.textoBotao" name="textoBotao" placeholder="Ver Ofertas">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Ordem de Exibição</mat-label>
+      <input matInput type="number" [(ngModel)]="banner.ordemExibicao" name="ordemExibicao" min="1">
+    </mat-form-field>
+
+    <mat-slide-toggle [(ngModel)]="banner.ativo" name="ativo">
+      Ativo
+    </mat-slide-toggle>
+
+    <div class="form-actions">
+      <button mat-stroked-button type="button" routerLink="/admin/banners">Cancelar</button>
+      <button mat-flat-button type="submit" class="save-btn">
+        <mat-icon>save</mat-icon>
+        {{ isEdit ? 'Atualizar' : 'Cadastrar' }}
+      </button>
+    </div>
+  </form>
+</div>

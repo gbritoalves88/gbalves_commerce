@@ -1,6 +1,11 @@
 // styles.scss
 @use '@angular/material' as mat;
 
+:root {
+  --cor-primaria: #1a237e;
+  --cor-secundaria: #ff4081;
+}
+
 html {
   height: 100%;
   @include mat.theme(
@@ -36,6 +41,6 @@ main {
 
 @media (max-width: 768px) {
   body {
-    padding-top: 140px;
+    padding-top: 160px;  // aumenta de 140px para dar espaço
   }
 }

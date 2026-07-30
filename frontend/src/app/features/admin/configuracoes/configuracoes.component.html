@@ -1,0 +1,75 @@
+<!-- features/admin/configuracoes/configuracoes.component.html -->
+<div class="configuracoes">
+  <div class="page-header">
+    <h1>Configurações da Loja</h1>
+  </div>
+
+  @if (mensagem) {
+    <div class="mensagem-sucesso">{{ mensagem }}</div>
+  }
+
+  <form (ngSubmit)="salvar()" class="form-card">
+    <h2>Identidade</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Nome da Loja</mat-label>
+      <input matInput [(ngModel)]="config.nomeLoja" name="nomeLoja">
+    </mat-form-field>
+
+    <div class="upload-area">
+      <input type="file" #fileInput (change)="uploadLogo($event)" accept="image/*" hidden>
+      <button type="button" mat-stroked-button (click)="fileInput.click()" [disabled]="uploading">
+        <mat-icon>cloud_upload</mat-icon>
+        {{ uploading ? 'Enviando...' : 'Upload Logo' }}
+      </button>
+      @if (config.logo) {
+        <img [src]="config.logo" alt="Logo" class="logo-preview">
+      }
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>URL do Logo</mat-label>
+      <input matInput [(ngModel)]="config.logo" name="logo">
+    </mat-form-field>
+
+    <h2>Cores</h2>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Cor Primária</mat-label>
+        <input matInput [(ngModel)]="config.corPrimaria" name="corPrimaria" required>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Cor Secundária</mat-label>
+        <input matInput [(ngModel)]="config.corSecundaria" name="corSecundaria" required>
+      </mat-form-field>
+    </div>
+
+    <h2>Contato</h2>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>WhatsApp</mat-label>
+        <input matInput [(ngModel)]="config.whatsapp" name="whatsapp">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Instagram</mat-label>
+        <input matInput [(ngModel)]="config.instagram" name="instagram">
+      </mat-form-field>
+    </div>
+
+    <h2>SEO</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Título SEO</mat-label>
+      <input matInput [(ngModel)]="config.seoTitulo" name="seoTitulo">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Descrição SEO</mat-label>
+      <textarea matInput [(ngModel)]="config.seoDescricao" name="seoDescricao" rows="2"></textarea>
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-flat-button type="submit" class="save-btn">
+        <mat-icon>save</mat-icon>
+        Salvar Configurações
+      </button>
+    </div>
+  </form>
+</div>

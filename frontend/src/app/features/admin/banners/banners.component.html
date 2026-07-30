@@ -1,0 +1,58 @@
+<!-- features/admin/banners/banners.component.html -->
+<div class="banners-admin">
+  <div class="page-header">
+    <div>
+      <h1>Banners</h1>
+      <p>{{ banners().length }} banners cadastrados</p>
+    </div>
+    <button mat-fab extended routerLink="/admin/banners/new">
+      <mat-icon>add</mat-icon>
+      Novo Banner
+    </button>
+  </div>
+
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="banners()">
+      <ng-container matColumnDef="imagemUrl">
+        <th mat-header-cell *matHeaderCellDef>Imagem</th>
+        <td mat-cell *matCellDef="let banner">
+          <img [src]="banner.imagemUrl" [alt]="banner.titulo" class="banner-thumb">
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="titulo">
+        <th mat-header-cell *matHeaderCellDef>Título</th>
+        <td mat-cell *matCellDef="let banner">{{ banner.titulo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="ordemExibicao">
+        <th mat-header-cell *matHeaderCellDef>Ordem</th>
+        <td mat-cell *matCellDef="let banner">{{ banner.ordemExibicao }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="ativo">
+        <th mat-header-cell *matHeaderCellDef>Ativo</th>
+        <td mat-cell *matCellDef="let banner">
+          <span [style.color]="banner.ativo ? '#4caf50' : '#f44336'">
+            {{ banner.ativo ? 'Sim' : 'Não' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let banner">
+          <button mat-icon-button [routerLink]="['/admin/banners/edit', banner.id]">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteBanner(banner.id)">
+            <mat-icon color="warn">delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

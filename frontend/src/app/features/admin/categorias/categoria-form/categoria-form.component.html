@@ -1,0 +1,55 @@
+<!-- features/admin/categorias/categoria-form/categoria-form.component.html -->
+<div class="categoria-form">
+  <div class="page-header">
+    <div>
+      <a routerLink="/admin/categorias" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        Voltar
+      </a>
+      <h1>{{ isEdit ? 'Editar Categoria' : 'Nova Categoria' }}</h1>
+    </div>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" class="form-card">
+    <mat-form-field appearance="outline">
+      <mat-label>Nome da Categoria</mat-label>
+      <input matInput [(ngModel)]="categoria.nome" name="nome"
+             (blur)="generateSlug()" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Slug</mat-label>
+      <input matInput [(ngModel)]="categoria.slug" name="slug" required>
+    </mat-form-field>
+
+    <!-- Upload de Imagem -->
+    <div class="upload-area">
+      <input type="file" #fileInput (change)="uploadImagem($event)" accept="image/*" hidden>
+      <button type="button" mat-stroked-button (click)="fileInput.click()" [disabled]="uploading">
+        <mat-icon>cloud_upload</mat-icon>
+        {{ uploading ? 'Enviando...' : 'Upload Imagem' }}
+      </button>
+      @if (categoria.imagemUrl) {
+        <img [src]="categoria.imagemUrl" alt="Preview" class="img-preview">
+      }
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>URL da Imagem</mat-label>
+      <input matInput [(ngModel)]="categoria.imagemUrl" name="imagemUrl">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Ordem de Exibição</mat-label>
+      <input matInput type="number" [(ngModel)]="categoria.ordemExibicao" name="ordemExibicao">
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-stroked-button type="button" routerLink="/admin/categorias">Cancelar</button>
+      <button mat-flat-button type="submit" class="save-btn">
+        <mat-icon>save</mat-icon>
+        {{ isEdit ? 'Atualizar' : 'Cadastrar' }}
+      </button>
+    </div>
+  </form>
+</div>

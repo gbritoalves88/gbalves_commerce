@@ -100,7 +100,7 @@
 }
 
 // Produtos em Destaque
-.featured-products {
+.featured-produtos {
   .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -149,7 +149,7 @@
   }
 }
 
-.products-grid {
+.produtos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 24px;
@@ -179,7 +179,7 @@
     font-size: 0.9rem;
   }
 
-  .products-grid {
+  .produtos-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
@@ -190,7 +190,7 @@
 }
 
 @media (max-width: 480px) {
-  .products-grid {
+  .produtos-grid {
     grid-template-columns: 1fr;
   }
 }

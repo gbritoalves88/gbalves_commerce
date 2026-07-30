@@ -1,6 +1,6 @@
 // shared/footer/footer.component.scss
 .footer {
-  background: #1a237e;
+  background: var(--cor-primaria);
   color: white;
   padding: 60px 0 0;
 }
@@ -17,12 +17,10 @@
   gap: 40px;
 }
 
-.footer-col {
-  p {
-    color: rgba(255, 255, 255, 0.7);
-    line-height: 1.6;
-    font-size: 0.9rem;
-  }
+.footer-col p {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  font-size: 0.9rem;
 }
 
 .footer-logo {
@@ -38,7 +36,7 @@
     width: 32px;
     height: 32px;
     background: white;
-    color: #1a237e;
+    color: var(--cor-primaria);
     padding: 6px;
     border-radius: 8px;
   }
@@ -57,7 +55,7 @@ h4 {
     left: 0;
     width: 30px;
     height: 2px;
-    background: #ff4081;
+    background: var(--cor-secundaria);
   }
 }
 
@@ -69,9 +67,7 @@ h4 {
   margin-bottom: 10px;
   transition: color 0.2s;
 
-  &:hover {
-    color: white;
-  }
+  &:hover { color: white; }
 }
 
 .social-links {
@@ -90,9 +86,7 @@ h4 {
     color: white;
     transition: background 0.2s;
 
-    &:hover {
-      background: #ff4081;
-    }
+    &:hover { background: var(--cor-secundaria); }
   }
 }
 
@@ -108,14 +102,9 @@ h4 {
   font-weight: 600;
   width: fit-content;
 
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
 }
 
-// Linha Inferior
 .footer-bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   margin-top: 40px;
@@ -133,7 +122,6 @@ h4 {
   }
 }
 
-// Responsivo
 @media (max-width: 768px) {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
