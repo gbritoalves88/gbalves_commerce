@@ -145,15 +145,15 @@ h1 {
 }
 
 .home-btn {
-  background: #1a237e !important;
+  background: var(--cor-primaria);
   color: white !important;
   border-radius: 12px !important;
 }
 
 .track-btn {
   background: white !important;
-  color: #1a237e !important;
-  border: 2px solid #1a237e !important;
+  color: var(--cor-primaria);
+  border: 2px solid var(--cor-primaria);
   border-radius: 12px !important;
 }
 

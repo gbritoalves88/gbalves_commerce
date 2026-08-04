@@ -6,11 +6,12 @@ import { ConfigService } from './shared/services/config.service';
 import { Title, Meta } from '@angular/platform-browser';
 import { filter, map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ToastComponent } from './shared/toast/toast.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, ToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -35,6 +36,11 @@ export class AppComponent implements OnInit {
 
       if (config.seoTitulo) this.title.setTitle(config.seoTitulo);
       if (config.seoDescricao) this.meta.updateTag({ name: 'description', content: config.seoDescricao });
+       if (config.favicon) {
+          const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
+          if (link) link.href = config.favicon;
+        }
+
     });
   }
 }

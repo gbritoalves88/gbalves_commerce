@@ -54,18 +54,19 @@ export class MenuService {
   }
 
   /** Adicionar item a um menu */
-  salvarItem(menuId: string, data: {
-    nome: string;
-    slug?: string;
-    url?: string;
-    icone?: string;
-    itemPaiId?: string | null;
-    ordemExibicao?: number;
-  }): Observable<MenuItem> {
-    return this.api.post<MenuItem>(`Menus/${menuId}/itens`, data).pipe(
-      tap(() => this.carregarItens(menuId).subscribe())
-    );
-  }
+ salvarItem(menuId: string, data: {
+  nome: string;
+  slug?: string;
+  url?: string;
+  icone?: string;
+  itemPaiId?: string | null;
+  ordemExibicao?: number;
+  categoriaId?: string | null;  // ← ADICIONAR
+}): Observable<MenuItem> {
+  return this.api.post<MenuItem>(`Menus/${menuId}/itens`, data).pipe(
+    tap(() => this.carregarItens(menuId).subscribe())
+  );
+}
 
   /** Remover item */
   removerItem(itemId: string): Observable<void> {

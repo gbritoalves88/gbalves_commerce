@@ -6,26 +6,30 @@ import Swiper from 'swiper';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { BannerService } from '../../shared/services/banner.service';
 import { ProdutoService } from '../../shared/services/produto.service';
-import { ProdutoCarrinhoComponent } from '../../shared/produto-card/produto-card.component';
-
+import { ProdutoCardComponent } from '../../shared/produto-card/produto-card.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, MatIconModule, ProdutoCarrinhoComponent],
+  imports: [RouterModule, MatIconModule, ProdutoCardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements AfterViewInit, OnInit {
   private bannerService = inject(BannerService);
   private productService = inject(ProdutoService);
+  private router = inject(Router);
   featuredProducts = this.productService.destaques;
 
   banners = this.bannerService.banners;
   private swiper: Swiper | null = null;
 
   ngOnInit(): void {
-    this.bannerService.loadBanners().subscribe();
+    this.bannerService.loadBanners().subscribe(() => {
+      // Inicia Swiper só depois dos banners carregarem
+      setTimeout(() => this.initSwiper(), 200);
+    });
     this.productService.loadDestaques().subscribe();
   }
 
@@ -47,5 +51,9 @@ export class HomeComponent implements AfterViewInit, OnInit {
       observer: true,
       observeParents: true,
     });
+  }
+
+  navegar(url: string): void {
+    this.router.navigateByUrl(url);
   }
 }

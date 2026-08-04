@@ -19,7 +19,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); flex-wrap: wrap;
   mat-form-field { flex: 1; min-width: 180px; }
   button {
-    height: 56px; background: #1a237e !important;
+    height: 56px; background: var(--cor-primaria);
     color: white !important; border-radius: 8px !important; white-space: nowrap;
   }
 }

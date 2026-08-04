@@ -11,6 +11,7 @@ export class BannerService {
   private api = inject(ApiService);
   banners = signal<Banner[]>([]);
 
+
   loadBanners(): Observable<Banner[]> {
     return this.api.get<Banner[]>('Banners/ativos').pipe(
       tap(banners => this.banners.set(banners))

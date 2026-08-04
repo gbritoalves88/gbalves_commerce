@@ -2,25 +2,33 @@
 <div class="meus-pedidos">
   <h2>Meus Pedidos</h2>
 
-  @if (pedidos.length > 0) {
+  @if (loading) {
+    <div class="empty">
+      <mat-icon class="spinner">hourglass_empty</mat-icon>
+      <p>Carregando seus pedidos...</p>
+    </div>
+  } @else if (pedidos().length > 0) {
     <div class="pedidos-list">
-      @for (order of pedidos; track order.id) {
-        <div class="order-card">
-          <div class="order-info">
-            <strong>Pedido #{{ order.id }}</strong>
-            <span>{{ order.date }}</span>
+      @for (pedido of pedidos(); track pedido.id) {
+        <div class="pedido-card" [routerLink]="['/pedido-confirmado', pedido.id]">
+          <div class="pedido-info">
+            <strong>Pedido #{{ pedido.numeroPedido }}</strong>
+            <span>{{ pedido.criadoEm | date:'dd/MM/yyyy' }}</span>
           </div>
-          <div class="order-total">{{ order.total }}</div>
-          <span class="status-badge" [style.background]="getStatusColor(order.status)">
-            {{ order.status }}
+          <div class="pedido-total">R$ {{ pedido.total.toFixed(2) }}</div>
+          <span class="status-badge" [style.background]="getStatusColor(pedido.status)">
+            {{ getStatusLabel(pedido.status) }}
           </span>
+          <mat-icon class="arrow">chevron_right</mat-icon>
         </div>
       }
     </div>
   } @else {
     <div class="empty">
       <mat-icon>receipt_long</mat-icon>
-      <p>Nenhum pedido encontrado</p>
+      <h3>Nenhum pedido</h3>
+      <p>Você ainda não fez nenhum pedido.</p>
+      <a routerLink="/produtos" class="browse-link">Ver produtos</a>
     </div>
   }
 </div>

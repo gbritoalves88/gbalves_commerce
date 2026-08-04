@@ -1,0 +1,66 @@
+<!-- features/cadastro/cadastro.component.html -->
+<div class="cadastro-page">
+  <div class="cadastro-box">
+    <h1>Criar Conta</h1>
+    <p class="cadastro-subtitle">Preencha os dados para se cadastrar</p>
+
+    @if (error) {
+      <div class="error-alert">
+        <mat-icon>error_outline</mat-icon>
+        {{ error }}
+      </div>
+    }
+
+    <form (ngSubmit)="onSubmit()" class="cadastro-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nome completo</mat-label>
+        <input matInput [(ngModel)]="usuario.nome" name="nome" required>
+        <mat-icon matPrefix>person</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [(ngModel)]="usuario.email" name="email" required>
+        <mat-icon matPrefix>email</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Telefone</mat-label>
+        <input matInput [(ngModel)]="usuario.telefone" name="telefone">
+        <mat-icon matPrefix>phone</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>CPF</mat-label>
+        <input matInput [(ngModel)]="usuario.cpf" name="cpf">
+        <mat-icon matPrefix>badge</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Senha</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'"
+               [(ngModel)]="usuario.senha" name="senha" required>
+        <mat-icon matPrefix>lock</mat-icon>
+        <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Confirmar Senha</mat-label>
+        <input matInput type="password" [(ngModel)]="usuario.confirmarSenha" name="confirmarSenha" required>
+        <mat-icon matPrefix>lock</mat-icon>
+      </mat-form-field>
+
+      <button mat-flat-button class="cadastro-btn" type="submit" [disabled]="loading">
+        <mat-icon>person_add</mat-icon>
+        {{ loading ? 'Criando...' : 'Criar Conta' }}
+      </button>
+    </form>
+
+    <div class="cadastro-footer">
+      <span>Já tem conta?</span>
+      <a routerLink="/login">Entrar</a>
+    </div>
+  </div>
+</div>

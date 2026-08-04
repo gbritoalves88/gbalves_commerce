@@ -13,8 +13,7 @@
   <form (ngSubmit)="onSubmit()" class="form-card">
     <mat-form-field appearance="outline">
       <mat-label>Nome da Categoria</mat-label>
-      <input matInput [(ngModel)]="categoria.nome" name="nome"
-             (blur)="generateSlug()" required>
+      <input matInput [(ngModel)]="categoria.nome" name="nome" (blur)="generateSlug()" required>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
@@ -22,7 +21,6 @@
       <input matInput [(ngModel)]="categoria.slug" name="slug" required>
     </mat-form-field>
 
-    <!-- Upload de Imagem -->
     <div class="upload-area">
       <input type="file" #fileInput (change)="uploadImagem($event)" accept="image/*" hidden>
       <button type="button" mat-stroked-button (click)="fileInput.click()" [disabled]="uploading">
@@ -46,9 +44,9 @@
 
     <div class="form-actions">
       <button mat-stroked-button type="button" routerLink="/admin/categorias">Cancelar</button>
-      <button mat-flat-button type="submit" class="save-btn">
+      <button mat-flat-button type="submit" class="save-btn" [disabled]="salvando">
         <mat-icon>save</mat-icon>
-        {{ isEdit ? 'Atualizar' : 'Cadastrar' }}
+        {{ salvando ? 'Salvando...' : (isEdit ? 'Atualizar' : 'Cadastrar') }}
       </button>
     </div>
   </form>

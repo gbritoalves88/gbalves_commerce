@@ -14,14 +14,16 @@ import { ProductFormComponent } from './features/admin/produtos/produtos-form/pr
 import { CategoriasComponent } from './features/admin/categorias/categorias.component';
 import { CategoriaFormComponent } from './features/admin/categorias/categoria-form/categoria-form.component';
 import { PedidosComponent } from './features/admin/pedidos/pedidos.component';
-import { OrderDetailComponent } from './features/admin/pedidos/pedidos-detalhes/pedido-detalhes.component';
-import { PerfilComponent } from './features/perfil/perfil.component';
+import { PedidoDetalhesComponent } from './features/admin/pedidos/pedidos-detalhes/pedido-detalhes.component';
+import { PerfilComponent } from './features/perfil/perfil/perfil.component';
 import { MeusPedidosComponent } from './features/perfil/meus-pedidos/meus-pedidos.component';
 import { ConfiguracoesComponent } from './features/admin/configuracoes/configuracoes.component';
 import { authGuard } from './shared/guards/auth.guard';
 import { BannersComponent } from './features/admin/banners/banners.component';
 import { BannerFormComponent } from './features/admin/banners/banner-form/banner-form.component';
 import { MenusComponent } from './features/admin/menus/menus.component';
+import { CadastroComponent } from './features/cadastro/cadastro.component';
+import { InstitucionalComponent } from './features/institucional/institucional.component';
 
 export const routes: Routes = [
   // Loja
@@ -34,6 +36,8 @@ export const routes: Routes = [
   { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] },
   { path: 'perfil/pedidos', component: MeusPedidosComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginComponent },
+  { path: 'cadastro', component: CadastroComponent },
+  { path: 'pagina/:pagina', component: InstitucionalComponent },
 
   // Admin
   {
@@ -48,7 +52,7 @@ export const routes: Routes = [
       { path: 'categorias/new', component: CategoriaFormComponent },
       { path: 'categorias/edit/:id', component: CategoriaFormComponent },
       { path: 'pedidos', component: PedidosComponent },
-      { path: 'pedidos/:id', component: OrderDetailComponent },
+      { path: 'pedidos/:id', component: PedidoDetalhesComponent },
       { path: 'configuracoes', component: ConfiguracoesComponent },
       { path: 'banners', component: BannersComponent },
       { path: 'banners/new', component: BannerFormComponent },

@@ -61,6 +61,7 @@
   font-weight: 600;
   font-size: 1rem;
   transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;  // ← adicionar
 
   &:hover {
     transform: translateY(-2px);
@@ -139,7 +140,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #1a237e;
+  color: var(--cor-primaria);
   text-decoration: none;
   font-weight: 600;
   transition: gap 0.2s;

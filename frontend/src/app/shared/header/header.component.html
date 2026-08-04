@@ -3,8 +3,8 @@
   <!-- Faixa Superior -->
   <div class="top-bar">
     <div class="container">
-      <a routerLink="/contact">Fale Conosco</a>
-      <a routerLink="/track-order">Meus Pedidos</a>
+      <a routerLink="/pagina/contato">Fale Conosco</a>
+      <a routerLink="/perfil/pedidos">Meus Pedidos</a>
     </div>
   </div>
 
@@ -19,14 +19,16 @@
         @if (storeLogo) {
           <img [src]="storeLogo" [alt]="storeName" class="logo-img">
         }
-        @if (storeName) {
+        <!-- @if (storeName) {
           <span>{{ storeName }}</span>
-        }
+        } -->
       </a>
 
-      <div class="search-bar">
+     <div class="search-bar">
         <mat-icon>search</mat-icon>
-        <input type="text" placeholder="Buscar produtos...">
+        <input type="text" placeholder="Buscar produtos..."
+              [(ngModel)]="termoBusca" name="termoBusca"
+              (keyup.enter)="buscar()">
       </div>
 
       <div class="actions">
@@ -45,34 +47,30 @@
     </div>
   </div>
 
-  <!-- Menu Horizontal (Desktop) -->
+  <!-- Menu Horizontal (Desktop) - Simplificado -->
   <nav class="main-nav desktop-only" [style.background]="corPrimaria">
-    <div class="container">
-      <a routerLink="/" class="nav-link" routerLinkActive="active">Home</a>
-
-      @for (menu of menus; track menu.id) {
-        @if (menu.itens.length > 0) {
-          <button mat-button [matMenuTriggerFor]="menuDrop" class="nav-link">
-            {{ menu.nome }}
-            <mat-icon>arrow_drop_down</mat-icon>
-          </button>
-          <mat-menu #menuDrop="matMenu">
-            @for (item of menu.itens; track item.id) {
-              <button mat-menu-item (click)="navegar(item.url || '/produtos')">
-                <mat-icon>{{ item.icone || 'category' }}</mat-icon>
-                <span>{{ item.nome }}</span>
-              </button>
-            }
-          </mat-menu>
-        } @else {
-          <a [routerLink]="['/produtos']" class="nav-link">
-            {{ menu.nome }}
-          </a>
-        }
+  <div class="container">
+    @for (menu of menus; track menu.id) {
+      @if (menu.itens.length > 0) {
+        <button mat-button [matMenuTriggerFor]="menuDrop" class="nav-link">
+          {{ menu.nome }}
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+        <mat-menu #menuDrop="matMenu">
+          @for (item of menu.itens; track item.id) {
+            <button mat-menu-item (click)="navegar(item.url || '/produtos')">
+              {{ item.nome }}
+            </button>
+          }
+        </mat-menu>
+      } @else {
+        <a [routerLink]="['/produtos']" class="nav-link">
+          {{ menu.nome }}
+        </a>
       }
-    </div>
-  </nav>
-</header>
+    }
+  </div>
+</nav>
 
 <!-- Menu Dropdown do Perfil -->
 <mat-menu #profileMenu="matMenu">
@@ -102,51 +100,59 @@
     </button>
   }
 </mat-menu>
-
+<!-- Menu Lateral Mobile -->
 <!-- Menu Lateral Mobile -->
 @if (menuOpen) {
   <div class="mobile-overlay" (click)="closeMenu()"></div>
   <nav class="mobile-menu" [class.open]="menuOpen">
     <div class="mobile-menu-header" [style.background]="corPrimaria">
-      <span>🛍️ Menu</span>
+      <span>{{ storeName || 'Menu' }}</span>
       <button mat-icon-button (click)="closeMenu()">
         <mat-icon>close</mat-icon>
       </button>
     </div>
 
-    <a routerLink="/" class="mobile-link" (click)="closeMenu()">
-      <mat-icon>home</mat-icon>
-      Home
-    </a>
+    <div class="mobile-menu-content">
 
-    @for (menu of menus; track menu.id) {
-      <div class="mobile-link" style="font-weight: 700;">
-        <mat-icon>folder</mat-icon>
-        {{ menu.nome }}
+      @for (menu of menus; track menu.id) {
+      <div class="mobile-menu-group">
+        <button class="mobile-link menu-parent" (click)="toggleSubmenu(menu.id)">
+          <span>{{ menu.nome }}</span>
+          <mat-icon class="arrow">{{ isSubmenuOpen(menu.id) ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+
+        @if (isSubmenuOpen(menu.id)) {
+          @for (item of menu.itens; track item.id) {
+            <button class="mobile-link mobile-subitem"
+                    (click)="navegar(item.url || '/produtos'); closeMenu()">
+              {{ item.nome }}
+            </button>
+          }
+        }
       </div>
-      @for (item of menu.itens; track item.id) {
-        <a [routerLink]="[item.url || '/produtos']"
-           class="mobile-link" style="padding-left: 40px;"
-           (click)="closeMenu()">
-          <mat-icon>chevron_right</mat-icon>
-          {{ item.nome }}
-        </a>
-      }
     }
+    </div>
 
     <div class="mobile-menu-footer">
-      <a routerLink="/perfil" class="mobile-link" (click)="closeMenu()">
-        <mat-icon>person_outline</mat-icon>
-        Meu Perfil
-      </a>
-      <a routerLink="/track-order" class="mobile-link" (click)="closeMenu()">
-        <mat-icon>receipt_long</mat-icon>
-        Meus Pedidos
-      </a>
-      <a routerLink="/contact" class="mobile-link" (click)="closeMenu()">
-        <mat-icon>chat</mat-icon>
-        Fale Conosco
-      </a>
+      @if (isAuthenticated) {
+        <button class="mobile-link" (click)="navegar('/perfil'); closeMenu()">
+          <mat-icon>person_outline</mat-icon>
+          Meu Perfil
+        </button>
+        <button class="mobile-link" (click)="navegar('/perfil/pedidos'); closeMenu()">
+          <mat-icon>receipt_long</mat-icon>
+          Meus Pedidos
+        </button>
+        <button class="mobile-link logout-btn" (click)="logout(); closeMenu()">
+          <mat-icon>logout</mat-icon>
+          Sair
+        </button>
+      } @else {
+        <button class="mobile-link" (click)="navegar('/login'); closeMenu()">
+          <mat-icon>login</mat-icon>
+          Entrar
+        </button>
+      }
     </div>
   </nav>
 }

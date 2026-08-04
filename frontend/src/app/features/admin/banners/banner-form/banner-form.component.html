@@ -21,7 +21,6 @@
       <input matInput [(ngModel)]="banner.subtitulo" name="subtitulo">
     </mat-form-field>
 
-    <!-- Upload de Imagem -->
     <div class="upload-area">
       <input type="file" #fileInput (change)="uploadImagem($event)" accept="image/*" hidden>
       <button type="button" mat-stroked-button (click)="fileInput.click()" [disabled]="uploading">
@@ -39,6 +38,17 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
+      <mat-label>Categoria (opcional)</mat-label>
+      <mat-select [(ngModel)]="categoriaSelecionadaId"
+                  (ngModelChange)="onCategoriaChange($event)" name="categoriaId">
+        <mat-option [value]="null">Link personalizado</mat-option>
+        @for (cat of categorias(); track cat.id) {
+          <mat-option [value]="cat.id">{{ cat.nome }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
       <mat-label>Link</mat-label>
       <input matInput [(ngModel)]="banner.link" name="link" placeholder="/produtos">
     </mat-form-field>
@@ -53,15 +63,13 @@
       <input matInput type="number" [(ngModel)]="banner.ordemExibicao" name="ordemExibicao" min="1">
     </mat-form-field>
 
-    <mat-slide-toggle [(ngModel)]="banner.ativo" name="ativo">
-      Ativo
-    </mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="banner.ativo" name="ativo">Ativo</mat-slide-toggle>
 
     <div class="form-actions">
       <button mat-stroked-button type="button" routerLink="/admin/banners">Cancelar</button>
-      <button mat-flat-button type="submit" class="save-btn">
+      <button mat-flat-button type="submit" class="save-btn" [disabled]="salvando">
         <mat-icon>save</mat-icon>
-        {{ isEdit ? 'Atualizar' : 'Cadastrar' }}
+        {{ salvando ? 'Salvando...' : (isEdit ? 'Atualizar' : 'Cadastrar') }}
       </button>
     </div>
   </form>

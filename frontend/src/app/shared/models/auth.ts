@@ -5,8 +5,11 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
+  id: string;
   token: string;
   nome: string;
   email: string;
   nivelAcesso: string;
+  telefone: string | null;
+  cpf: string | null;
 }

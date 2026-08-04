@@ -6,7 +6,7 @@
       <div class="footer-col">
         <div class="footer-logo">
           <mat-icon>storefront</mat-icon>
-          <span>GBAlves Commerce</span>
+          <span>{{ storeName }}</span>
         </div>
         <p>Sua loja online de confiança. Produtos de qualidade com os melhores preços.</p>
       </div>
@@ -17,15 +17,15 @@
         <a routerLink="/">Home</a>
         <a routerLink="/produtos">Produtos</a>
         <a routerLink="/carrinho">Carrinho</a>
-        <a routerLink="/track-order">Meus Pedidos</a>
+        <a routerLink="/perfil/pedidos">Meus Pedidos</a>
       </div>
 
-      <!-- Coluna 3 - Ajuda -->
+      <!-- Coluna 3 - Contato -->
       <div class="footer-col">
-        <h4>Ajuda</h4>
-        <a routerLink="/contact">Fale Conosco</a>
-        <a routerLink="/privacy">Política de Privacidade</a>
-        <a routerLink="/exchanges">Trocas e Devoluções</a>
+        <h4>Contato</h4>
+        <a routerLink="/pagina/contato">Fale Conosco</a>
+        <a routerLink="/pagina/privacidade">Política de Privacidade</a>
+        <a routerLink="/pagina/trocas">Trocas e Devoluções</a>
       </div>
 
       <!-- Coluna 4 - Redes Sociais -->
@@ -37,26 +37,29 @@
               <mat-icon>camera</mat-icon>
             </a>
           }
-          <a href="#" target="_blank" aria-label="WhatsApp">
-            <mat-icon>chat</mat-icon>
-          </a>
-          @if (whatsapp) {
-            <div class="whatsapp-btn">
-              <mat-icon>whatsapp</mat-icon>
-              <span>{{ whatsapp }}</span>
-            </div>
+          @if (facebook) {
+            <a [href]="facebook" target="_blank" aria-label="Facebook">
+              <mat-icon>facebook</mat-icon>
+            </a>
+          }
+          @if (whatsappLimpo) {
+            <a [href]="'https://wa.me/55' + whatsappLimpo" target="_blank" aria-label="WhatsApp" class="social-btn">
+              <mat-icon>chat</mat-icon>
+            </a>
           }
         </div>
-        <div class="whatsapp-btn">
-          <mat-icon>whatsapp</mat-icon>
-          <span>(11) 99999-9999</span>
-        </div>
+        @if (whatsapp) {
+          <a [href]="'https://wa.me/55' + whatsappLimpo" target="_blank" class="whatsapp-btn">
+            <mat-icon>phone</mat-icon>
+            <span>{{ whatsapp }}</span>
+          </a>
+        }
       </div>
     </div>
 
     <!-- Linha Inferior -->
     <div class="footer-bottom">
-      <p>© 2026 GBAlves Commerce. Todos os direitos reservados.</p>
+      <p>© 2026 {{ storeName }}. Todos os direitos reservados.</p>
       <p>Desenvolvido por GBAlves</p>
     </div>
   </div>

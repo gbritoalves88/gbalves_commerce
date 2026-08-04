@@ -28,10 +28,6 @@ export class ProdutoService {
     return this.api.get<Produto[]>(`Produtos/categoria/${slug}`);
   }
 
-  getBySlug(slug: string): Observable<Produto> {
-    return this.api.get<Produto>(`Produtos/${slug}`);
-  }
-
   getById(id: string): Observable<Produto> {
     return this.api.get<Produto>(`Produtos/${id}`);
   }
@@ -46,5 +42,13 @@ export class ProdutoService {
 
   delete(id: string): Observable<void> {
     return this.api.delete<void>(`Produtos/${id}`);
+  }
+
+  getBySlug(slug: string): Observable<Produto> {
+    return this.api.get<Produto>(`Produtos/slug/${slug}`);
+  }
+
+  buscar(termo: string): Observable<Produto[]> {
+    return this.api.get<Produto[]>(`Produtos?busca=${encodeURIComponent(termo)}`);
   }
 }

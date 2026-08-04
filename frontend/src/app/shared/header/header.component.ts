@@ -10,13 +10,15 @@ import { AuthService } from '../services/auth.service';
 import { ConfigService } from '../services/config.service';
 import { MenuService, Menu } from '../services/menu.service';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
     MatIconModule, MatButtonModule, MatMenuModule,
-    MatDividerModule, RouterModule
+    MatDividerModule, RouterModule,  FormsModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -25,7 +27,10 @@ export class HeaderComponent implements OnInit {
   menus: Menu[] = [];
   menuOpen = false;
   scrolled = false;
-
+  termoBusca = '';
+  hoverMenuId: string | null = null;
+  openSubmenus: Set<string> = new Set();
+  private closeTimeout: any;
   private router = inject(Router);
   private cartService = inject(CarrinhoService);
   private authService = inject(AuthService);
@@ -41,6 +46,26 @@ export class HeaderComponent implements OnInit {
   @HostListener('window:scroll')
   onScroll(): void {
     this.scrolled = window.scrollY > 50;
+  }
+
+  buscar(): void {
+    const termo = this.termoBusca.trim();
+    if (termo) {
+      this.router.navigate(['/produtos'], { queryParams: { busca: termo } });
+      this.termoBusca = '';
+    }
+  }
+
+  toggleSubmenu(menuId: string): void {
+    if (this.openSubmenus.has(menuId)) {
+      this.openSubmenus.delete(menuId);
+    } else {
+      this.openSubmenus.add(menuId);
+    }
+  }
+
+  isSubmenuOpen(menuId: string): boolean {
+    return this.openSubmenus.has(menuId);
   }
 
   navegar(url: string): void {
@@ -75,7 +100,24 @@ export class HeaderComponent implements OnInit {
     this.menuOpen = !this.menuOpen;
   }
 
+
+  openMenu(trigger: MatMenuTrigger): void {
+    trigger.openMenu();
+  }
+
+
   closeMenu(): void {
     this.menuOpen = false;
   }
+
+  onMenuLeave(trigger: MatMenuTrigger): void {
+    this.closeTimeout = setTimeout(() => trigger.closeMenu(), 200);
+  }
+
+  onMenuEnter(trigger: MatMenuTrigger): void {
+    clearTimeout(this.closeTimeout);
+    trigger.openMenu();
+  }
+
+
 }

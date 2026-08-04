@@ -1,6 +1,13 @@
 <!-- app/app.html -->
-<app-header></app-header>
-<main>
+<app-toast></app-toast>
+
+@if (!isLoginPage()) {
+  <app-header></app-header>
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+  <app-footer></app-footer>
+} @else {
+  <app-toast></app-toast>
   <router-outlet></router-outlet>
-</main>
-<app-footer></app-footer>
+}

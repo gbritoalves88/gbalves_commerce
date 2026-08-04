@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { PedidoService } from '../../../../shared/services/pedido.service';
 import { PedidoResponse } from '../../../../shared/models/pedido';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-pedido-detalhes',
@@ -20,9 +21,10 @@ import { PedidoResponse } from '../../../../shared/models/pedido';
   templateUrl: './pedido-detalhes.component.html',
   styleUrl: './pedido-detalhes.component.scss'
 })
-export class OrderDetailComponent implements OnInit {
+export class PedidoDetalhesComponent implements OnInit {
   private pedidoService = inject(PedidoService);
   private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
 
   pedido: PedidoResponse | undefined;
   statusList = ['Pendente', 'Pago', 'Enviado', 'Entregue', 'Cancelado'];
@@ -30,7 +32,10 @@ export class OrderDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.pedidoService.obterPorId(id).subscribe(p => this.pedido = p);
+      this.pedidoService.obterPorId(id).subscribe(p => {
+        this.pedido = p;
+        this.cdr.markForCheck();  // ← adicionar
+      });
     }
   }
 

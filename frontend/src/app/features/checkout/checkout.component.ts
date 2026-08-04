@@ -1,5 +1,5 @@
 // features/checkout/checkout.component.ts
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +9,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { CarrinhoService } from '../../shared/services/carrinho.service';
 import { PedidoService } from '../../shared/services/pedido.service';
+import { AuthService } from '../../shared/services/auth.service';
+import { AlertService } from '../../shared/services/alert.service';
 
 @Component({
   selector: 'app-checkout',
@@ -20,13 +22,16 @@ import { PedidoService } from '../../shared/services/pedido.service';
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
 })
-export class CheckoutComponent {
-  private cartService = inject(CarrinhoService);
+export class CheckoutComponent implements OnInit {
+  private carrinhoService = inject(CarrinhoService);
   private pedidoService = inject(PedidoService);
+  private authService = inject(AuthService);
+  private alertService = inject(AlertService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
-  cartItems = this.cartService.cartItems;
-  cartTotal = this.cartService.cartTotal;
+  cartItems = this.carrinhoService.cartItems;
+  cartTotal = this.carrinhoService.cartTotal;
 
   cliente = {
     nome: '',
@@ -45,12 +50,19 @@ export class CheckoutComponent {
 
   loading = false;
 
-  get total(): number {
-    return this.cartTotal();
+  ngOnInit(): void {
+    const user = this.authService.currentUser();
+    if (user) {
+      this.cliente.nome = user.nome || '';
+      this.cliente.email = user.email || '';
+      this.cliente.telefone = user.telefone || '';
+      this.cliente.cpf = user.cpf || '';
+      this.cdr.markForCheck();
+    }
   }
 
-  get itemsCount(): number {
-    return this.cartItems().reduce((sum, i) => sum + i.quantidade, 0);
+  get total(): number {
+    return this.cartTotal();
   }
 
   buscarCep(): void {
@@ -63,6 +75,7 @@ export class CheckoutComponent {
             this.cliente.bairro = data.bairro;
             this.cliente.cidade = data.localidade;
             this.cliente.estado = data.uf;
+            this.cdr.markForCheck();
           }
         });
     }
@@ -93,11 +106,12 @@ export class CheckoutComponent {
 
     this.pedidoService.criar(pedido).subscribe({
       next: (response) => {
-        this.cartService.clearCart();
+        this.carrinhoService.clearCart();
+        this.alertService.success('Pedido realizado com sucesso!');
         this.router.navigate(['/pedido-confirmado', response.id]);
       },
       error: () => {
-        alert('Erro ao finalizar pedido. Tente novamente.');
+        this.alertService.error('Erro ao finalizar pedido. Tente novamente.');
         this.loading = false;
       }
     });

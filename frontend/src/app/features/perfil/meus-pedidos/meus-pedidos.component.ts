@@ -1,26 +1,48 @@
 // features/perfil/meus-pedidos/meus-pedidos.component.ts
-import { Component } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { DatePipe } from '@angular/common';
+import { PedidoService, PedidoResumo } from '../../../shared/services/pedido.service';
 
 @Component({
   selector: 'app-meus-pedidos',
   standalone: true,
-  imports: [MatIconModule, RouterModule],
+  imports: [MatIconModule, RouterModule, DatePipe],
   templateUrl: './meus-pedidos.component.html',
   styleUrl: './meus-pedidos.component.scss'
 })
-export class MeusPedidosComponent {
-  pedidos = [
-    { id: 1001, date: '20/07/2026', total: 'R$ 259,90', status: 'Entregue' },
-    { id: 1002, date: '21/07/2026', total: 'R$ 89,90', status: 'Enviado' },
-  ];
+export class MeusPedidosComponent implements OnInit {
+  private pedidoService = inject(PedidoService);
+
+  pedidos = signal<PedidoResumo[]>([]);
+  loading = true;
+
+  ngOnInit(): void {
+    this.pedidoService.meusPedidos().subscribe({
+      next: (p) => { this.pedidos.set(p); this.loading = false; },
+      error: () => this.loading = false
+    });
+  }
+
+  getStatusLabel(status: string): string {
+    const labels: Record<string, string> = {
+      'Pendente': 'Pendente', 'Pending': 'Pendente',
+      'Pago': 'Pago', 'Paid': 'Pago',
+      'Enviado': 'Enviado', 'Shipped': 'Enviado',
+      'Entregue': 'Entregue', 'Delivered': 'Entregue',
+      'Cancelado': 'Cancelado', 'Cancelled': 'Cancelado'
+    };
+    return labels[status] || status;
+  }
 
   getStatusColor(status: string): string {
     const colors: Record<string, string> = {
-      'Entregue': '#4caf50',
-      'Enviado': '#2196f3',
-      'Pendente': '#ff9800',
+      'Pendente': '#ff9800', 'Pending': '#ff9800',
+      'Pago': '#4caf50', 'Paid': '#4caf50',
+      'Enviado': '#2196f3', 'Shipped': '#2196f3',
+      'Entregue': '#9c27b0', 'Delivered': '#9c27b0',
+      'Cancelado': '#f44336', 'Cancelled': '#f44336'
     };
     return colors[status] || '#999';
   }

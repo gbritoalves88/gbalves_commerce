@@ -20,11 +20,11 @@
 
       <mat-form-field appearance="outline" class="flex-1">
         <mat-label>Categoria</mat-label>
-          <mat-select [(ngModel)]="product.categoriaId" name="categoriaId" required>
-            @for (cat of categories(); track cat.id) {
-              <mat-option [value]="cat.id">{{ cat.nome }}</mat-option>
-            }
-          </mat-select>
+        <mat-select [(ngModel)]="product.categoriaId" name="categoriaId" required>
+          @for (cat of categories(); track cat.id) {
+            <mat-option [value]="cat.id">{{ cat.nome }}</mat-option>
+          }
+        </mat-select>
       </mat-form-field>
     </div>
 
@@ -53,7 +53,6 @@
       </mat-form-field>
     </div>
 
-    <!-- Upload de Imagem -->
     <div class="upload-area">
       <input type="file" #fileInput (change)="uploadImagem($event)" accept="image/*" hidden>
       <button type="button" mat-stroked-button (click)="fileInput.click()" [disabled]="uploading">
@@ -81,9 +80,9 @@
 
     <div class="form-actions">
       <button mat-stroked-button type="button" routerLink="/admin/produtos">Cancelar</button>
-      <button mat-flat-button type="submit" class="save-btn">
+      <button mat-flat-button type="submit" class="save-btn" [disabled]="salvando">
         <mat-icon>save</mat-icon>
-        {{ isEdit ? 'Atualizar' : 'Cadastrar' }}
+        {{ salvando ? 'Salvando...' : (isEdit ? 'Atualizar' : 'Cadastrar') }}
       </button>
     </div>
   </form>

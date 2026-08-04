@@ -3,6 +3,9 @@
   padding: 30px 0 60px;
   background: #f5f5f5;
   min-height: 100vh;
+  display: block; // força renderização
+  position: relative;
+  z-index: 1;
 }
 
 .container {
@@ -24,7 +27,7 @@
     text-decoration: none;
 
     &:hover {
-      color: #1a237e;
+      color: var(--cor-primaria);
     }
   }
 
@@ -87,7 +90,7 @@
 .category-tag {
   display: inline-block;
   background: #e8eaf6;
-  color: #1a237e;
+  color: var(--cor-primaria);
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -120,7 +123,7 @@ h1 {
   .current-price {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #1a237e;
+    color: var(--cor-primaria);
   }
 
   .installments {
@@ -202,7 +205,7 @@ h1 {
 // Botão Comprar
 .buy-btn {
   width: 100%;
-  background: #1a237e !important;
+  background: var(--cor-primaria);
   color: white !important;
   border-radius: 12px !important;
   padding: 16px !important;
@@ -211,7 +214,7 @@ h1 {
   transition: background 0.3s, transform 0.2s;
 
   &:hover {
-    background: #283593 !important;
+    background: var(--cor-primaria);
     transform: translateY(-2px);
   }
 }

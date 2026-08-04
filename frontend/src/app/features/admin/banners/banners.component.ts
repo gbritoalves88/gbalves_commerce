@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { BannerService } from '../../../shared/services/banner.service';
+import { AlertService } from '../../../shared/services/alert.service';
 
 @Component({
   selector: 'app-banners',
@@ -15,17 +16,22 @@ import { BannerService } from '../../../shared/services/banner.service';
 })
 export class BannersComponent implements OnInit {
   private bannerService = inject(BannerService);
+  private alertService = inject(AlertService);
   banners = this.bannerService.banners;
   displayedColumns = ['imagemUrl', 'titulo', 'ordemExibicao', 'ativo', 'actions'];
 
   ngOnInit(): void {
-    this.bannerService.loadBanners().subscribe();
+    this.bannerService.loadAll().subscribe();
   }
 
-  deleteBanner(id: string): void {
-    if (confirm('Excluir este banner?')) {
-      this.bannerService.delete(id).subscribe(() => {
-        this.bannerService.loadBanners().subscribe();
+  deletarBanner(id: string, titulo: string): void {
+    if (confirm(`Excluir o banner "${titulo}"?`)) {
+      this.bannerService.delete(id).subscribe({
+        next: () => {
+          this.alertService.success('Banner excluído com sucesso!');
+          this.bannerService.loadAll().subscribe();
+        },
+        error: () => this.alertService.error('Erro ao excluir banner')
       });
     }
   }
