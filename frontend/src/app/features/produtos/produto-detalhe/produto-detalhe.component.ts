@@ -1,12 +1,12 @@
 // features/produtos/produto-detalhe/produto-detalhe.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Produto } from '../../../shared/models/produto';
 import { CarrinhoService } from '../../../shared/services/carrinho.service';
 import { ProdutoService } from '../../../shared/services/produto.service';
-import { inject } from '@angular/core/primitives/di';
+import { AlertService } from '../../../shared/services/alert.service';
 
 @Component({
   selector: 'app-produto-detalhe',
@@ -16,45 +16,45 @@ import { inject } from '@angular/core/primitives/di';
   styleUrl: './produto-detalhe.component.scss'
 })
 export class ProdutoDetalheComponent implements OnInit {
-  product: Produto | undefined;
-  quantity = 1;
-  private productService = inject(ProdutoService);
+  private route = inject(ActivatedRoute);
+  private carrinhoService = inject(CarrinhoService);
+  private produtoService = inject(ProdutoService);
+  private alertService = inject(AlertService);
+  private cdr = inject(ChangeDetectorRef);
 
-  constructor(
-    private route: ActivatedRoute,
-    private carrinhoService: CarrinhoService
-  ) {}
+  produto: Produto | undefined;
+  quantidade = 1;
 
   ngOnInit(): void {
     const slug = this.route.snapshot.paramMap.get('slug');
     if (slug) {
-      this.productService.getBySlug(slug).subscribe(p => this.product = p);
+      this.produtoService.getBySlug(slug).subscribe(p => {
+        this.produto = p;
+        this.cdr.markForCheck();
+      });
     }
   }
 
-  increaseQuantity(): void {
-    if (this.product && this.quantity < this.product.estoque) {
-      this.quantity++;
+  aumentarQuantidade(): void {
+    if (this.produto && this.quantidade < this.produto.estoque) {
+      this.quantidade++;
     }
   }
 
-  decreaseQuantity(): void {
-    if (this.quantity > 1) {
-      this.quantity--;
+  diminuirQuantidade(): void {
+    if (this.quantidade > 1) {
+      this.quantidade--;
     }
   }
 
-  addToCart(): void {
-    if (!this.product) return;
-    this.carrinhoService.addToCart(this.product, this.quantity);
-    // Feedback simples
-    alert(`${this.quantity}x ${this.product.nome} adicionado ao carrinho!`);
+  adicionarAoCarrinho(): void {
+    if (!this.produto) return;
+    this.carrinhoService.addToCart(this.produto, this.quantidade);
+    this.alertService.success(`${this.quantidade}x ${this.produto.nome} adicionado ao carrinho!`);
   }
 
-  calculateDiscount(): number {
-    if (!this.product?.precoOriginal) return 0;
-    return Math.round(
-      ((this.product.precoOriginal - this.product.preco) / this.product.precoOriginal) * 100
-    );
+  calcularDesconto(): number {
+    if (!this.produto?.precoOriginal) return 0;
+    return Math.round(((this.produto.precoOriginal - this.produto.preco) / this.produto.precoOriginal) * 100);
   }
 }

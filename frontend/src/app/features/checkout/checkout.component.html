@@ -1,86 +1,174 @@
-<!-- features/checkout/checkout.component.html (trecho do formulário) -->
-<div class="form-section">
-  <h2>👤 Dados Pessoais</h2>
+<!-- features/checkout/checkout.component.html -->
+<section class="checkout-page">
+  <div class="container">
+    <h1>Finalizar Pedido</h1>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Nome completo</mat-label>
-    <input matInput [(ngModel)]="cliente.nome" name="nome" required>
-  </mat-form-field>
+    @if (cartItems().length > 0) {
+      <div class="checkout-layout">
+        <form class="checkout-form" (ngSubmit)="finalizarPedido()">
+          <!-- Dados Pessoais -->
+          <div class="form-section">
+            <h2>👤 Dados Pessoais</h2>
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Telefone</mat-label>
+                <input matInput
+                       [(ngModel)]="cliente.telefone"
+                       name="telefone"
+                       (input)="onTelefoneInput($event)"
+                       placeholder="(11) 91234-5678"
+                       maxlength="15"
+                       required>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>CPF</mat-label>
+                <input matInput
+                       [(ngModel)]="cliente.cpf"
+                       name="cpf"
+                       (input)="onCpfInput($event)"
+                       placeholder="123.456.789-00"
+                       maxlength="14">
+              </mat-form-field>
+            </div>
+          </div>
 
-  <div class="form-row">
-    <mat-form-field appearance="outline">
-      <mat-label>Email</mat-label>
-      <input matInput type="email" [(ngModel)]="cliente.email" name="email" required>
-    </mat-form-field>
+          <!-- Endereço de Entrega -->
+          <div class="form-section">
+            <h2>📍 Endereço de Entrega</h2>
+            <div class="form-row cep-row">
+              <mat-form-field appearance="outline" class="cep-field">
+                <mat-label>CEP</mat-label>
+                <input matInput
+                       [(ngModel)]="cliente.cep"
+                       name="cep"
+                       (input)="onCepInput($event)"
+                       (blur)="buscarCep()"
+                       placeholder="01001-000"
+                       maxlength="9"
+                       required>
+              </mat-form-field>
+              <button type="button" mat-stroked-button (click)="buscarCep()">Buscar</button>
+            </div>
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="street-field">
+                <mat-label>Rua</mat-label>
+                <input matInput [(ngModel)]="cliente.rua" name="rua" required>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="number-field">
+                <mat-label>Número</mat-label>
+                <input matInput [(ngModel)]="cliente.numero" name="numero" required>
+              </mat-form-field>
+            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Complemento</mat-label>
+              <input matInput [(ngModel)]="cliente.complemento" name="complemento">
+            </mat-form-field>
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Bairro</mat-label>
+                <input matInput [(ngModel)]="cliente.bairro" name="bairro" required>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Cidade</mat-label>
+                <input matInput [(ngModel)]="cliente.cidade" name="cidade" required>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="state-field">
+                <mat-label>UF</mat-label>
+                <input matInput
+                       [(ngModel)]="cliente.estado"
+                       name="estado"
+                       maxlength="2"
+                       (input)="onUfInput($event)"
+                       placeholder="SP"
+                       required>
+              </mat-form-field>
+            </div>
+          </div>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Telefone</mat-label>
-      <input matInput [(ngModel)]="cliente.telefone" name="telefone" required>
-    </mat-form-field>
+          <!-- Frete -->
+          @if (calculandoFrete) {
+            <div class="form-section">
+              <p class="loading-text">Calculando frete...</p>
+            </div>
+          } @else if (fretes.length > 0) {
+            <div class="form-section">
+              <h2>🚚 Opções de Frete</h2>
+              <mat-radio-group [(ngModel)]="freteSelecionado" name="frete" class="frete-options">
+                @for (f of fretes; track f.id) {
+                  <mat-radio-button [value]="f" (change)="selecionarFrete(f)">
+                    <span class="frete-item">
+                      <strong>{{ f.transportadora }} {{ f.nome }}</strong>
+                      <span>R$ {{ f.valor.toFixed(2) }} - {{ f.prazoEntrega }} dias úteis</span>
+                    </span>
+                  </mat-radio-button>
+                }
+              </mat-radio-group>
+            </div>
+          } @else {
+            <div class="form-section">
+              <p class="info-text">Informe o CEP para calcular o frete.</p>
+            </div>
+          }
+
+          <!-- Forma de Pagamento -->
+          <div class="form-section">
+            <h2>💳 Forma de Pagamento</h2>
+            <mat-radio-group [(ngModel)]="cliente.formaPagamento" name="formaPagamento" class="payment-options">
+              <mat-radio-button value="pix">
+                <mat-icon>pix</mat-icon>
+                Pix
+              </mat-radio-button>
+              <mat-radio-button value="cartao_credito">
+                <mat-icon>credit_card</mat-icon>
+                Cartão de Crédito
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <button mat-fab extended class="finish-btn" type="submit" [disabled]="loading">
+            <mat-icon>lock</mat-icon>
+            {{ loading ? 'Processando...' : 'Finalizar Pedido - R$ ' + totalComFrete.toFixed(2) }}
+          </button>
+        </form>
+
+        <!-- Resumo -->
+        <aside class="checkout-summary">
+          <h2>📦 Resumo do Pedido</h2>
+          <div class="summary-items">
+            @for (item of cartItems(); track item.produto.id) {
+              <div class="summary-item">
+                <img [src]="item.produto.imagemUrl" [alt]="item.produto.nome">
+                <div class="summary-item-info">
+                  <span class="summary-item-name">{{ item.produto.nome }}</span>
+                  <span class="summary-item-qty">Qtd: {{ item.quantidade }}</span>
+                </div>
+                <span class="summary-item-price">R$ {{ (item.produto.preco * item.quantidade).toFixed(2) }}</span>
+              </div>
+            }
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>R$ {{ total.toFixed(2) }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Frete</span>
+            <span>{{ freteSelecionado ? 'R$ ' + freteSelecionado.valor.toFixed(2) : 'Não calculado' }}</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row total-row">
+            <span>Total</span>
+            <span>R$ {{ totalComFrete.toFixed(2) }}</span>
+          </div>
+        </aside>
+      </div>
+    } @else {
+      <div class="empty-cart">
+        <mat-icon>shopping_cart</mat-icon>
+        <h2>Seu carrinho está vazio</h2>
+        <p>Adicione produtos antes de finalizar o pedido.</p>
+        <a routerLink="/produtos" mat-flat-button>Ver Produtos</a>
+      </div>
+    }
   </div>
-
-  <mat-form-field appearance="outline">
-    <mat-label>CPF</mat-label>
-    <input matInput [(ngModel)]="cliente.cpf" name="cpf">
-  </mat-form-field>
-</div>
-
-<div class="form-section">
-  <h2>📍 Endereço de Entrega</h2>
-
-  <div class="form-row cep-row">
-    <mat-form-field appearance="outline" class="cep-field">
-      <mat-label>CEP</mat-label>
-      <input matInput [(ngModel)]="cliente.cep" name="cep" maxlength="8" (blur)="buscarCep()" required>
-    </mat-form-field>
-    <button type="button" mat-stroked-button (click)="buscarCep()">Buscar</button>
-  </div>
-
-  <div class="form-row">
-    <mat-form-field appearance="outline" class="street-field">
-      <mat-label>Rua</mat-label>
-      <input matInput [(ngModel)]="cliente.rua" name="rua" required>
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="number-field">
-      <mat-label>Número</mat-label>
-      <input matInput [(ngModel)]="cliente.numero" name="numero" required>
-    </mat-form-field>
-  </div>
-
-  <mat-form-field appearance="outline">
-    <mat-label>Complemento</mat-label>
-    <input matInput [(ngModel)]="cliente.complemento" name="complemento">
-  </mat-form-field>
-
-  <div class="form-row">
-    <mat-form-field appearance="outline">
-      <mat-label>Bairro</mat-label>
-      <input matInput [(ngModel)]="cliente.bairro" name="bairro" required>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Cidade</mat-label>
-      <input matInput [(ngModel)]="cliente.cidade" name="cidade" required>
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="state-field">
-      <mat-label>UF</mat-label>
-      <input matInput [(ngModel)]="cliente.estado" name="estado" maxlength="2" required>
-    </mat-form-field>
-  </div>
-</div>
-
-<div class="form-section">
-  <h2>💳 Forma de Pagamento</h2>
-  <mat-radio-group [(ngModel)]="cliente.formaPagamento" name="formaPagamento" class="payment-options">
-    <mat-radio-button value="pix">
-      <mat-icon>pix</mat-icon> Pix
-    </mat-radio-button>
-    <mat-radio-button value="cartao_credito">
-      <mat-icon>credit_card</mat-icon> Cartão de Crédito
-    </mat-radio-button>
-  </mat-radio-group>
-</div>
-
-<button mat-fab extended class="finish-btn" (click)="finalizarPedido()" [disabled]="loading">
-  <mat-icon>lock</mat-icon>
-  {{ loading ? 'Processando...' : 'Finalizar Pedido - R$ ' + total.toFixed(2) }}
-</button>
+</section>

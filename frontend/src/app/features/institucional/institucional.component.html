@@ -1,0 +1,54 @@
+<!-- features/institucional/institucional.component.html -->
+<section class="institucional-page">
+  <div class="container">
+    <a routerLink="/" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      Voltar
+    </a>
+    <h1>{{ titulo }}</h1>
+
+    <div class="content-card">
+      @if (pagina === 'privacidade') {
+        <p>Nós respeitamos sua privacidade. Todas as informações fornecidas são utilizadas exclusivamente para processamento de pedidos e comunicação com nossos clientes.</p>
+        <p>Seus dados pessoais não serão compartilhados com terceiros sem sua autorização expressa.</p>
+        <p>Utilizamos cookies para melhorar sua experiência de navegação em nosso site.</p>
+      }
+
+      @if (pagina === 'trocas') {
+        <p>Você tem até <strong>7 dias</strong> após o recebimento para solicitar troca ou devolução.</p>
+        <p>O produto deve estar em perfeito estado, na embalagem original e sem sinais de uso.</p>
+        <p>Para solicitar uma troca, entre em contato pelo nosso WhatsApp ou email.</p>
+      }
+
+
+      @if (pagina === 'contato') {
+        <h2>Fale Conosco</h2>
+        <p>Estamos disponíveis para atender você!</p>
+        <div class="contact-info">
+          @if (whatsapp) {
+            <a [href]="'https://wa.me/55' + whatsapp" target="_blank" class="contact-item">
+              <mat-icon>whatsapp</mat-icon>
+              <span>WhatsApp: {{ whatsapp }}</span>
+            </a>
+          }
+          @if (telefone) {
+            <a [href]="'tel:' + telefone" class="contact-item">
+              <mat-icon>phone</mat-icon>
+              <span>Telefone: {{ telefone }}</span>
+            </a>
+          }
+          @if (email) {
+            <a [href]="'mailto:' + email" class="contact-item">
+              <mat-icon>email</mat-icon>
+              <span>Email: {{ email }}</span>
+            </a>
+          }
+          <div class="contact-item">
+            <mat-icon>schedule</mat-icon>
+            <span>Seg a Sex: 9h às 18h</span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

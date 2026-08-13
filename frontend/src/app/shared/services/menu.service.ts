@@ -2,23 +2,9 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { Observable, tap, switchMap, map } from 'rxjs';
+import { Menu, MenuItem } from '../models/menu';
 
-export interface Menu {
-  id: string;
-  nome: string;
-  localizacao: string;
-  itens: MenuItem[];
-}
 
-export interface MenuItem {
-  id: string;
-  nome: string;
-  slug: string | null;
-  url: string | null;
-  icone: string | null;
-  ordemExibicao: number;
-  subItens?: MenuItem[];
-}
 
 @Injectable({ providedIn: 'root' })
 export class MenuService {
@@ -34,6 +20,10 @@ export class MenuService {
     return this.api.get<Menu[]>('Menus').pipe(
       tap(menus => this.menus.set(menus))
     );
+  }
+
+  carregarMenusPorLocalizacao(localizacao: string): Observable<Menu> {
+    return this.api.get<Menu>(`Menus/${localizacao}`);
   }
 
   /** Salvar um novo menu (ex: Vestuário no header) */
@@ -61,6 +51,7 @@ export class MenuService {
     icone?: string;
     itemPaiId?: string | null;
     ordemExibicao?: number;
+    categoriaId?: string | null;  // ← ADICIONAR
   }): Observable<MenuItem> {
     return this.api.post<MenuItem>(`Menus/${menuId}/itens`, data).pipe(
       tap(() => this.carregarItens(menuId).subscribe())
@@ -70,5 +61,13 @@ export class MenuService {
   /** Remover item */
   removerItem(itemId: string): Observable<void> {
     return this.api.delete<void>(`Menus/itens/${itemId}`);
+  }
+
+  toggleMenu(menuId: string): Observable<void> {
+    return this.api.patch(`Menus/${menuId}/toggle`, {});
+  }
+
+  toggleItem(itemId: string): Observable<void> {
+    return this.api.patch(`Menus/itens/${itemId}/toggle`, {});
   }
 }

@@ -33,11 +33,19 @@
     <h2>Menus Cadastrados</h2>
     <div class="menu-list">
       @for (menu of menus(); track menu.id) {
-        <button mat-stroked-button
-                [class.active]="menuSelecionadoId === menu.id"
-                (click)="selecionarMenu(menu.id)">
-          {{ menu.nome }} ({{ menu.localizacao }})
-        </button>
+        <div class="menu-item-row">
+          <button mat-stroked-button
+                  [class.active]="menuSelecionadoId === menu.id"
+                  (click)="selecionarMenu(menu.id)">
+            {{ menu.nome }} ({{ menu.localizacao }})
+          </button>
+          <button mat-icon-button (click)="toggleMenu(menu.id)"
+                  [matTooltip]="menu.ativo ? 'Desativar menu' : 'Ativar menu'">
+            <mat-icon [style.color]="menu.ativo ? '#4caf50' : '#f44336'">
+              {{ menu.ativo ? 'visibility' : 'visibility_off' }}
+            </mat-icon>
+          </button>
+        </div>
       }
     </div>
   </div>
@@ -53,8 +61,13 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Slug</mat-label>
-          <input matInput [(ngModel)]="novoItem.slug" name="itemSlug" placeholder="camisetas">
+          <mat-label>Categoria</mat-label>
+          <mat-select [(ngModel)]="novoItem.categoriaId" name="categoriaId">
+            <mat-option [value]="null">Nenhuma (link genérico)</mat-option>
+            @for (cat of categorias(); track cat.id) {
+              <mat-option [value]="cat.id">{{ cat.nome }}</mat-option>
+            }
+          </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -73,11 +86,15 @@
         <table mat-table [dataSource]="itens()">
           <ng-container matColumnDef="nome">
             <th mat-header-cell *matHeaderCellDef>Nome</th>
-            <td mat-cell *matCellDef="let item">{{ item.nome }}</td>
+            <td mat-cell *matCellDef="let item">
+              <span [class.inativo]="!item.ativo">{{ item.nome }}</span>
+            </td>
           </ng-container>
           <ng-container matColumnDef="slug">
-            <th mat-header-cell *matHeaderCellDef>Slug</th>
-            <td mat-cell *matCellDef="let item">{{ item.slug || '-' }}</td>
+            <th mat-header-cell *matHeaderCellDef>URL</th>
+            <td mat-cell *matCellDef="let item">
+              <span [class.inativo]="!item.ativo">{{ item.url || '-' }}</span>
+            </td>
           </ng-container>
           <ng-container matColumnDef="ordemExibicao">
             <th mat-header-cell *matHeaderCellDef>Ordem</th>
@@ -86,6 +103,12 @@
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let item">
+              <button mat-icon-button (click)="toggleItem(item.id)"
+                      [matTooltip]="item.ativo ? 'Desativar item' : 'Ativar item'">
+                <mat-icon [style.color]="item.ativo ? '#4caf50' : '#f44336'">
+                  {{ item.ativo ? 'check_circle' : 'cancel' }}
+                </mat-icon>
+              </button>
               <button mat-icon-button (click)="removerItem(item.id)">
                 <mat-icon color="warn">delete</mat-icon>
               </button>

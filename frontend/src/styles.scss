@@ -29,6 +29,7 @@ body {
   height: 100%;
   overflow-x: hidden;
   width: 100%;
+  padding-top: 220px;  // header fixo desktop + mobile
 }
 
 * {
@@ -39,8 +40,13 @@ main {
   min-height: calc(100vh - 64px - 60px);
 }
 
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
 @media (max-width: 768px) {
   body {
-    padding-top: 160px;  // aumenta de 140px para dar espaço
+    padding-top: 160px;
   }
 }

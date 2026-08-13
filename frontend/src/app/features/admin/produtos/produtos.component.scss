@@ -1,10 +1,29 @@
 // features/admin/produtos/produtos.component.scss
 .produtos-admin {
+  margin-top: -150px;
   h1 {
     font-size: 1.8rem;
     color: #333;
     margin: 0;
   }
+}
+
+.inativo-badge {
+  background: #f44336;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  margin-left: 6px;
+}
+
+.zerado-badge {
+  background: #ff9800;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  margin-left: 6px;
 }
 
 .page-header {

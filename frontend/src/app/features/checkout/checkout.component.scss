@@ -61,15 +61,20 @@ mat-form-field {
 }
 
 .cep-row {
-  align-items: center;
+  display: flex;
+  align-items: flex-start;  // alinha no topo
+  gap: 12px;
 
   .cep-field {
     flex: 1;
+    margin-bottom: 0; // remove margem extra
   }
 
   button {
     height: 56px;
     white-space: nowrap;
+    margin-top: 0;
+    flex-shrink: 0;
   }
 }
 
@@ -207,6 +212,28 @@ mat-form-field {
   }
 }
 
+.frete-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  mat-radio-button {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+}
+
+.frete-item {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 0.9rem;
+
+  strong { min-width: 160px; }
+  span { color: #1a237e; font-weight: 600; }
+  small { color: #999; }
+}
+
 // Carrinho vazio
 .empty-carrinho {
   text-align: center;
@@ -250,7 +277,7 @@ mat-form-field {
     display: none;
   }
 
-  .form-row {
+   .form-row:not(.cep-row) {
     flex-direction: column;
     gap: 0;
   }
@@ -267,5 +294,19 @@ mat-form-field {
   .mobile-only {
     display: flex !important;
     margin-top: 16px;
+  }
+
+  .cep-row {
+    flex-direction: row;  // mantém lado a lado
+    align-items: flex-start;
+
+    .cep-field {
+      flex: 1;
+    }
+
+    button {
+      height: 56px;
+      white-space: nowrap;
+    }
   }
 }

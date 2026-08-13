@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { CategoriaService } from '../../../shared/services/categoria.service';
+import { AlertService } from '../../../shared/services/alert.service';
 
 @Component({
   selector: 'app-categorias',
@@ -15,6 +16,7 @@ import { CategoriaService } from '../../../shared/services/categoria.service';
 })
 export class CategoriasComponent implements OnInit {
   private categoriaService = inject(CategoriaService);
+  private alertService = inject(AlertService);
   categories = this.categoriaService.categories;
   displayedColumns = ['nome', 'slug', 'actions'];
 
@@ -24,8 +26,12 @@ export class CategoriasComponent implements OnInit {
 
   deleteCategoria(id: string, nome: string): void {
     if (confirm(`Excluir a categoria "${nome}"?`)) {
-      this.categoriaService.delete(id).subscribe(() => {
-        this.categoriaService.loadAll().subscribe();
+      this.categoriaService.delete(id).subscribe({
+        next: () => {
+          this.alertService.success('Categoria excluída com sucesso!');
+          this.categoriaService.loadAll().subscribe();
+        },
+        error: () => this.alertService.error('Erro ao excluir categoria')
       });
     }
   }

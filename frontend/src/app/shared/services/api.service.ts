@@ -1,6 +1,5 @@
-// core/services/api.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 
@@ -10,39 +9,34 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('auth_token');
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {})
-    });
-  }
-
+  // O interceptor adiciona o token automaticamente!
   get<T>(endpoint: string): Observable<T> {
-    return this.http.get<T>(`${this.baseUrl}/${endpoint}`, { headers: this.getHeaders() });
+    return this.http.get<T>(`${this.baseUrl}/${endpoint}`);
   }
 
   post<T>(endpoint: string, data: any): Observable<T> {
-    return this.http.post<T>(`${this.baseUrl}/${endpoint}`, data, { headers: this.getHeaders() });
+    return this.http.post<T>(`${this.baseUrl}/${endpoint}`, data);
   }
 
   put<T>(endpoint: string, data: any): Observable<T> {
-    return this.http.put<T>(`${this.baseUrl}/${endpoint}`, data, { headers: this.getHeaders() });
+    return this.http.put<T>(`${this.baseUrl}/${endpoint}`, data);
   }
 
   delete<T>(endpoint: string): Observable<T> {
-    return this.http.delete<T>(`${this.baseUrl}/${endpoint}`, { headers: this.getHeaders() });
+    return this.http.delete<T>(`${this.baseUrl}/${endpoint}`);
   }
 
   patch<T>(endpoint: string, data: any): Observable<T> {
-    return this.http.patch<T>(`${this.baseUrl}/${endpoint}`, data, { headers: this.getHeaders() });
+    return this.http.patch<T>(`${this.baseUrl}/${endpoint}`, data);
   }
 
   postForm<T>(endpoint: string, data: FormData): Observable<T> {
-    const token = localStorage.getItem('auth_token');
-    const headers = new HttpHeaders({
-      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    return this.http.post<T>(`${this.baseUrl}/${endpoint}`, data);
+  }
+
+  getBlob(endpoint: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/${endpoint}`, {
+      responseType: 'blob'
     });
-    return this.http.post<T>(`${this.baseUrl}/${endpoint}`, data, { headers });
   }
 }

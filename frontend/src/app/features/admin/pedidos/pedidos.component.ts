@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
 import { PedidoService } from '../../../shared/services/pedido.service';
+import { StatusUtil } from '../../../shared/utils/status.util';
 
 @Component({
   selector: 'app-pedidos',
@@ -24,29 +25,10 @@ export class PedidosComponent implements OnInit {
   }
 
   getStatusLabel(status: string): string {
-    const labels: Record<string, string> = {
-      'Pending': 'Pendente',
-      'Pendente': 'Pendente',
-      'Pago': 'Pago',
-      'Paid': 'Pago',
-      'Enviado': 'Enviado',
-      'Shipped': 'Enviado',
-      'Entregue': 'Entregue',
-      'Delivered': 'Entregue',
-      'Cancelado': 'Cancelado',
-      'Cancelled': 'Cancelado'
-    };
-    return labels[status] || status;
+    return StatusUtil.getStatusPedidoLabel(status);
   }
 
   getStatusColor(status: string): string {
-    const colors: Record<string, string> = {
-      'Pendente': '#ff9800',
-      'Pago': '#4caf50',
-      'Enviado': '#2196f3',
-      'Entregue': '#9c27b0',
-      'Cancelado': '#f44336'
-    };
-    return colors[status] || '#999';
+    return StatusUtil.getStatusPedidoColor(status);
   }
 }

@@ -45,7 +45,7 @@
           <button mat-icon-button [routerLink]="['/admin/banners/edit', banner.id]">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button (click)="deleteBanner(banner.id)">
+          <button mat-icon-button (click)="deletarBanner(banner.id, banner.titulo)">
             <mat-icon color="warn">delete</mat-icon>
           </button>
         </td>

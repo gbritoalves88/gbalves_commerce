@@ -18,13 +18,28 @@ export class FooterComponent {
     return this.configService.config()?.nomeLoja || '';
   }
 
+  get email(): string | null {
+    return this.configService.config()?.email || null;
+  }
+
+  get telefone(): string | null {
+    return this.configService.config()?.telefone || null;
+  }
+
   get whatsapp(): string | null {
     return this.configService.config()?.whatsapp || null;
+  }
+
+  get whatsappLimpo(): string {
+    const numero = this.configService.config()?.whatsapp || '';
+    return numero.replace(/\D/g, '');
   }
 
   get instagram(): string | null {
     return this.configService.config()?.instagram || null;
   }
 
-
+  get facebook(): string | null {
+    return this.configService.config()?.facebook || null;
+  }
 }

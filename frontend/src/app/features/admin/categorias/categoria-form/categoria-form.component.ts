@@ -1,5 +1,5 @@
 // features/admin/categorias/categoria-form/categoria-form.component.ts
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { CategoriaService } from '../../../../shared/services/categoria.service';
 import { UploadService } from '../../../../shared/services/upload.service';
+import { AlertService } from '../../../../shared/services/alert.service';
 import { Categoria } from '../../../../shared/models/categoria';
 
 @Component({
@@ -20,16 +21,18 @@ import { Categoria } from '../../../../shared/models/categoria';
   templateUrl: './categoria-form.component.html',
   styleUrl: './categoria-form.component.scss'
 })
-
 export class CategoriaFormComponent implements OnInit {
   private categoriaService = inject(CategoriaService);
   private uploadService = inject(UploadService);
+  private alertService = inject(AlertService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   isEdit = false;
   categoriaId: string | null = null;
   uploading = false;
+  salvando = false;
 
   categoria: Categoria = {
     id: '', nome: '', slug: '', imagemUrl: null,
@@ -41,23 +44,21 @@ export class CategoriaFormComponent implements OnInit {
     if (id && id !== 'new') {
       this.isEdit = true;
       this.categoriaId = id;
-      this.categoriaService.getById(id).subscribe(c => {
-        if (c) this.categoria = c;
+      this.categoriaService.getById(id).subscribe({
+        next: (c) => { if (c) { this.categoria = c; this.cdr.markForCheck(); } },
+        error: () => this.alertService.error('Erro ao carregar categoria')
       });
     }
   }
 
   generateSlug(): void {
     this.categoria.slug = this.categoria.nome
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
+      .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   }
 
   uploadImagem(event: any): void {
     const file = event.target.files[0];
     if (!file) return;
-
     this.uploading = true;
     const reader = new FileReader();
     reader.onload = () => {
@@ -65,22 +66,35 @@ export class CategoriaFormComponent implements OnInit {
         next: (res) => {
           this.categoria.imagemUrl = res.url;
           this.uploading = false;
+          this.cdr.markForCheck();
+          this.alertService.success('Imagem enviada!');
         },
-        error: () => this.uploading = false
+        error: () => {
+          this.uploading = false;
+          this.alertService.error('Erro ao enviar imagem');
+        }
       });
     };
     reader.readAsDataURL(file);
   }
 
   onSubmit(): void {
-    if (this.isEdit && this.categoriaId) {
-      this.categoriaService.update(this.categoriaId, this.categoria).subscribe(() => {
+    if (this.salvando) return;
+    this.salvando = true;
+
+    const request = this.isEdit && this.categoriaId
+      ? this.categoriaService.update(this.categoriaId, this.categoria)
+      : this.categoriaService.create(this.categoria);
+
+    request.subscribe({
+      next: () => {
+        this.alertService.success(this.isEdit ? 'Categoria atualizada!' : 'Categoria criada!');
         this.router.navigate(['/admin/categorias']);
-      });
-    } else {
-      this.categoriaService.create(this.categoria).subscribe(() => {
-        this.router.navigate(['/admin/categorias']);
-      });
-    }
+      },
+      error: () => {
+        this.salvando = false;
+        this.alertService.error('Erro ao salvar categoria');
+      }
+    });
   }
 }

@@ -18,6 +18,12 @@ export class ProdutoService {
     );
   }
 
+  loadAllAdmin(): Observable<Produto[]> {
+    return this.api.get<Produto[]>('Produtos/admin').pipe(
+      tap(p => this.produtos.set(p))
+    );
+  }
+
   loadDestaques(): Observable<Produto[]> {
     return this.api.get<Produto[]>('Produtos/destaques').pipe(
       tap(p => this.destaques.set(p))
@@ -26,10 +32,6 @@ export class ProdutoService {
 
   loadByCategory(slug: string): Observable<Produto[]> {
     return this.api.get<Produto[]>(`Produtos/categoria/${slug}`);
-  }
-
-  getBySlug(slug: string): Observable<Produto> {
-    return this.api.get<Produto>(`Produtos/${slug}`);
   }
 
   getById(id: string): Observable<Produto> {
@@ -46,5 +48,13 @@ export class ProdutoService {
 
   delete(id: string): Observable<void> {
     return this.api.delete<void>(`Produtos/${id}`);
+  }
+
+  getBySlug(slug: string): Observable<Produto> {
+    return this.api.get<Produto>(`Produtos/slug/${slug}`);
+  }
+
+  buscar(termo: string): Observable<Produto[]> {
+    return this.api.get<Produto[]>(`Produtos?busca=${encodeURIComponent(termo)}`);
   }
 }

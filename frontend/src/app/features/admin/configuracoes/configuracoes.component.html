@@ -4,10 +4,6 @@
     <h1>Configurações da Loja</h1>
   </div>
 
-  @if (mensagem) {
-    <div class="mensagem-sucesso">{{ mensagem }}</div>
-  }
-
   <form (ngSubmit)="salvar()" class="form-card">
     <h2>Identidade</h2>
     <mat-form-field appearance="outline">
@@ -31,6 +27,23 @@
       <input matInput [(ngModel)]="config.logo" name="logo">
     </mat-form-field>
 
+    <h2>Favicon</h2>
+    <div class="upload-area">
+      <input type="file" #faviconInput (change)="uploadFavicon($event)" accept="image/*" hidden>
+      <button type="button" mat-stroked-button (click)="faviconInput.click()" [disabled]="uploadingFavicon">
+        <mat-icon>cloud_upload</mat-icon>
+        {{ uploadingFavicon ? 'Enviando...' : 'Upload Favicon' }}
+      </button>
+      @if (config.favicon) {
+        <img [src]="config.favicon" alt="Favicon" class="favicon-preview">
+      }
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>URL do Favicon</mat-label>
+      <input matInput [(ngModel)]="config.favicon" name="favicon">
+    </mat-form-field>
+
     <h2>Cores</h2>
     <div class="form-row">
       <mat-form-field appearance="outline" class="flex-1">
@@ -46,6 +59,16 @@
     <h2>Contato</h2>
     <div class="form-row">
       <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [(ngModel)]="config.email" name="email">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Telefone</mat-label>
+        <input matInput [(ngModel)]="config.telefone" name="telefone">
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-1">
         <mat-label>WhatsApp</mat-label>
         <input matInput [(ngModel)]="config.whatsapp" name="whatsapp">
       </mat-form-field>
@@ -54,6 +77,10 @@
         <input matInput [(ngModel)]="config.instagram" name="instagram">
       </mat-form-field>
     </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Facebook</mat-label>
+      <input matInput [(ngModel)]="config.facebook" name="facebook">
+    </mat-form-field>
 
     <h2>SEO</h2>
     <mat-form-field appearance="outline">
@@ -66,9 +93,9 @@
     </mat-form-field>
 
     <div class="form-actions">
-      <button mat-flat-button type="submit" class="save-btn">
+      <button mat-flat-button type="submit" class="save-btn" [disabled]="salvando">
         <mat-icon>save</mat-icon>
-        Salvar Configurações
+        {{ salvando ? 'Salvando...' : 'Salvar Configurações' }}
       </button>
     </div>
   </form>

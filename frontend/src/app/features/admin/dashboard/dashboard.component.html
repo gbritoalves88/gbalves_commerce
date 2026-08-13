@@ -1,9 +1,14 @@
 <!-- features/admin/dashboard/dashboard.component.html -->
 <div class="dashboard">
-  <h1>Dashboard</h1>
+  <div class="page-header">
+    <h1>Dashboard</h1>
+    <button mat-flat-button class="export-btn" (click)="exportar()">
+      <mat-icon>download</mat-icon>
+      Exportar Relatório
+    </button>
+  </div>
 
   @if (dados()) {
-    <!-- Cards -->
     <div class="stats-grid">
       @for (stat of stats(); track stat.label) {
         <div class="stat-card">
@@ -18,7 +23,6 @@
       }
     </div>
 
-    <!-- Últimos Pedidos -->
     <div class="recent-pedidos">
       <h2>Últimos Pedidos</h2>
       <div class="table-wrapper">

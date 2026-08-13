@@ -1,77 +1,67 @@
 <!-- features/produtos/produto-detalhe/produto-detalhe.component.html -->
-@if (product) {
+@if (produto) {
   <section class="produto-detalhe">
     <div class="container">
-      <!-- Breadcrumb -->
       <nav class="breadcrumb">
         <a routerLink="/">Home</a>
         <mat-icon>chevron_right</mat-icon>
-        <a [routerLink]="['/produtos']" [queryParams]="{category: product.categoriaNome}">
-          {{ product.categoriaNome }}
+        <a [routerLink]="['/produtos']" [queryParams]="{categoria: produto.categoriaNome}">
+          {{ produto.categoriaNome }}
         </a>
         <mat-icon>chevron_right</mat-icon>
-        <span>{{ product.nome }}</span>
+        <span>{{ produto.nome }}</span>
       </nav>
 
       <div class="product-layout">
-        <!-- Imagem -->
         <div class="product-gallery">
           <div class="main-image">
-            <img [src]="product.imagemUrl" [alt]="product.nome">
-            @if (product.precoOriginal) {
-              <span class="discount-badge">-{{ calculateDiscount() }}%</span>
+            <img [src]="produto.imagemUrl" [alt]="produto.nome">
+            @if (produto.precoOriginal) {
+              <span class="discount-badge">-{{ calcularDesconto() }}%</span>
             }
           </div>
         </div>
 
-        <!-- Informações -->
         <div class="product-info">
-          <span class="category-tag">{{ product.categoriaNome }}</span>
-          <h1>{{ product.nome }}</h1>
+          <span class="category-tag">{{ produto.categoriaNome }}</span>
+          <h1>{{ produto.nome }}</h1>
 
-          <!-- Preço -->
           <div class="price-block">
-            @if (product.precoOriginal) {
-              <span class="original-price">R$ {{ product.precoOriginal.toFixed(2) }}</span>
+            @if (produto.precoOriginal) {
+              <span class="original-price">R$ {{ produto.precoOriginal.toFixed(2) }}</span>
             }
-            <span class="current-price">R$ {{ product.preco.toFixed(2) }}</span>
+            <span class="current-price">R$ {{ produto.preco.toFixed(2) }}</span>
             <span class="installments">em até 3x sem juros</span>
           </div>
 
-          <!-- Descrição -->
           <div class="description">
             <h3>Descrição</h3>
-            <p>{{ product.descricao }}</p>
+            <p>{{ produto.descricao }}</p>
           </div>
 
-          <!-- Quantidade -->
           <div class="quantity-selector">
             <span>Quantidade:</span>
             <div class="quantity-controls">
-              <button (click)="decreaseQuantity()" [disabled]="quantity <= 1">
+              <button (click)="diminuirQuantidade()" [disabled]="quantidade <= 1">
                 <mat-icon>remove</mat-icon>
               </button>
-              <span class="quantity-value">{{ quantity }}</span>
-              <button (click)="increaseQuantity()" [disabled]="quantity >= product.estoque">
+              <span class="quantity-value">{{ quantidade }}</span>
+              <button (click)="aumentarQuantidade()" [disabled]="quantidade >= produto.estoque">
                 <mat-icon>add</mat-icon>
               </button>
             </div>
-            <span class="stock-info">
-              {{ product.estoque }} unidades disponíveis
-            </span>
+            <span class="stock-info">{{ produto.estoque }} unidades disponíveis</span>
           </div>
 
-          <!-- Botão Comprar -->
-          <button mat-fab extended class="buy-btn" (click)="addToCart()">
+          <button mat-fab extended class="buy-btn" (click)="adicionarAoCarrinho()">
             <mat-icon>shopping_cart</mat-icon>
             Adicionar ao Carrinho
           </button>
 
-          <!-- Frete -->
-          <div class="shipping-info">
+         <!-- <div class="shipping-info">
             <mat-icon>local_shipping</mat-icon>
             <span>Frete grátis para compras acima de R$ 199</span>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
