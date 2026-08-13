@@ -10,7 +10,7 @@
 
   <!-- Linha Principal -->
   <div class="main-row">
-    <div class="container main-row-content">
+    <div class="main-row-content">
       <button mat-icon-button class="hamburger" (click)="toggleMenu()">
         <mat-icon>menu</mat-icon>
       </button>
@@ -19,16 +19,13 @@
         @if (storeLogo) {
           <img [src]="storeLogo" [alt]="storeName" class="logo-img">
         }
-        <!-- @if (storeName) {
-          <span>{{ storeName }}</span>
-        } -->
       </a>
 
-     <div class="search-bar">
+      <div class="search-bar">
         <mat-icon>search</mat-icon>
         <input type="text" placeholder="Buscar produtos..."
-              [(ngModel)]="termoBusca" name="termoBusca"
-              (keyup.enter)="buscar()">
+               [(ngModel)]="termoBusca" name="termoBusca"
+               (keyup.enter)="buscar()">
       </div>
 
       <div class="actions">
@@ -47,112 +44,126 @@
     </div>
   </div>
 
-  <!-- Menu Horizontal (Desktop) - Simplificado -->
+  <!-- Menu Horizontal (Desktop) -->
   <nav class="main-nav desktop-only" [style.background]="corPrimaria">
-  <div class="container">
-    @for (menu of menus; track menu.id) {
-      @if (menu.itens.length > 0) {
-        <button mat-button [matMenuTriggerFor]="menuDrop" class="nav-link">
-          {{ menu.nome }}
-          <mat-icon>arrow_drop_down</mat-icon>
-        </button>
-        <mat-menu #menuDrop="matMenu">
-          @for (item of menu.itens; track item.id) {
-            <button mat-menu-item (click)="navegar(item.url || '/produtos')">
-              {{ item.nome }}
-            </button>
-          }
-        </mat-menu>
-      } @else {
-        <a [routerLink]="['/produtos']" class="nav-link">
-          {{ menu.nome }}
-        </a>
-      }
-    }
-  </div>
-</nav>
-
-<!-- Menu Dropdown do Perfil -->
-<mat-menu #profileMenu="matMenu">
-  @if (isAuthenticated) {
-    <button mat-menu-item routerLink="/perfil">
-      <mat-icon>person</mat-icon>
-      <span>Meu Perfil</span>
-    </button>
-    <button mat-menu-item routerLink="/perfil/pedidos">
-      <mat-icon>receipt_long</mat-icon>
-      <span>Meus Pedidos</span>
-    </button>
-    <mat-divider></mat-divider>
-    <button mat-menu-item routerLink="/admin">
-      <mat-icon>admin_panel_settings</mat-icon>
-      <span>Painel Admin</span>
-    </button>
-    <mat-divider></mat-divider>
-    <button mat-menu-item (click)="logout()">
-      <mat-icon>logout</mat-icon>
-      <span>Sair</span>
-    </button>
-  } @else {
-    <button mat-menu-item routerLink="/login">
-      <mat-icon>login</mat-icon>
-      <span>Entrar</span>
-    </button>
-  }
-</mat-menu>
-<!-- Menu Lateral Mobile -->
-<!-- Menu Lateral Mobile -->
-@if (menuOpen) {
-  <div class="mobile-overlay" (click)="closeMenu()"></div>
-  <nav class="mobile-menu" [class.open]="menuOpen">
-    <div class="mobile-menu-header" [style.background]="corPrimaria">
-      <span>{{ storeName || 'Menu' }}</span>
-      <button mat-icon-button (click)="closeMenu()">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-
-    <div class="mobile-menu-content">
-
+    <div class="container">
       @for (menu of menus; track menu.id) {
-      <div class="mobile-menu-group">
-        <button class="mobile-link menu-parent" (click)="toggleSubmenu(menu.id)">
-          <span>{{ menu.nome }}</span>
-          <mat-icon class="arrow">{{ isSubmenuOpen(menu.id) ? 'expand_less' : 'expand_more' }}</mat-icon>
-        </button>
-
-        @if (isSubmenuOpen(menu.id)) {
-          @for (item of menu.itens; track item.id) {
-            <button class="mobile-link mobile-subitem"
-                    (click)="navegar(item.url || '/produtos'); closeMenu()">
-              {{ item.nome }}
-            </button>
-          }
+        @if (menu.itens.length > 0) {
+          <button mat-button [matMenuTriggerFor]="menuDrop" class="nav-link">
+            {{ menu.nome }}
+            <mat-icon>arrow_drop_down</mat-icon>
+          </button>
+          <mat-menu #menuDrop="matMenu">
+            @for (item of menu.itens; track item.id) {
+              <button mat-menu-item (click)="navegar(item.url || '/produtos')">
+                {{ item.nome }}
+              </button>
+            }
+          </mat-menu>
+        } @else {
+          <a [routerLink]="['/produtos']" class="nav-link">
+            {{ menu.nome }}
+          </a>
         }
-      </div>
-    }
-    </div>
-
-    <div class="mobile-menu-footer">
-      @if (isAuthenticated) {
-        <button class="mobile-link" (click)="navegar('/perfil'); closeMenu()">
-          <mat-icon>person_outline</mat-icon>
-          Meu Perfil
-        </button>
-        <button class="mobile-link" (click)="navegar('/perfil/pedidos'); closeMenu()">
-          <mat-icon>receipt_long</mat-icon>
-          Meus Pedidos
-        </button>
-        <button class="mobile-link logout-btn" (click)="logout(); closeMenu()">
-          <mat-icon>logout</mat-icon>
-          Sair
-        </button>
-      } @else {
-        <button class="mobile-link" (click)="navegar('/login'); closeMenu()">
-          <mat-icon>login</mat-icon>
-          Entrar
-        </button>
       }
     </div>
   </nav>
-}
+
+  <!-- Menu Perfil -->
+  <mat-menu #profileMenu="matMenu">
+    @if (isAuthenticated) {
+      <button mat-menu-item routerLink="/perfil">
+        <mat-icon>person</mat-icon>
+        <span>Meu Perfil</span>
+      </button>
+      <button mat-menu-item routerLink="/perfil/pedidos">
+        <mat-icon>receipt_long</mat-icon>
+        <span>Meus Pedidos</span>
+      </button>
+
+      @if (isAdmin || isOperador) {
+        <mat-divider></mat-divider>
+        <button mat-menu-item routerLink="/admin">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span>Painel Admin</span>
+        </button>
+      }
+
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Sair</span>
+      </button>
+    } @else {
+      <button mat-menu-item routerLink="/login">
+        <mat-icon>login</mat-icon>
+        <span>Entrar</span>
+      </button>
+    }
+  </mat-menu>
+
+  <!-- Menu Mobile -->
+  @if (menuOpen) {
+    <div class="mobile-overlay" (click)="closeMenu()"></div>
+    <nav class="mobile-menu" [class.open]="menuOpen">
+      <div class="mobile-menu-header" [style.background]="corPrimaria">
+        <span>{{ storeName || 'Menu' }}</span>
+        <button mat-icon-button (click)="closeMenu()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="mobile-menu-content">
+        @for (menu of menus; track menu.id) {
+          <div class="mobile-menu-group">
+            <button class="mobile-link menu-parent" (click)="toggleSubmenu(menu.id)">
+              <span>{{ menu.nome }}</span>
+              <mat-icon class="arrow">
+                {{ isSubmenuOpen(menu.id) ? 'expand_less' : 'expand_more' }}
+              </mat-icon>
+            </button>
+
+            @if (isSubmenuOpen(menu.id)) {
+              @for (item of menu.itens; track item.id) {
+                <button class="mobile-link mobile-subitem"
+                        (click)="navegar(item.url || '/produtos'); closeMenu()">
+                  {{ item.nome }}
+                </button>
+              }
+            }
+          </div>
+        }
+      </div>
+
+      <div class="mobile-menu-footer">
+        @if (isAuthenticated) {
+          <button class="mobile-link" (click)="navegar('/perfil'); closeMenu()">
+            <mat-icon>person_outline</mat-icon>
+            Meu Perfil
+          </button>
+          <button class="mobile-link" (click)="navegar('/perfil/pedidos'); closeMenu()">
+            <mat-icon>receipt_long</mat-icon>
+            Meus Pedidos
+          </button>
+
+          @if (isAdmin || isOperador) {
+            <button class="mobile-link" (click)="navegar('/admin'); closeMenu()">
+              <mat-icon>admin_panel_settings</mat-icon>
+              Painel Admin
+            </button>
+          }
+
+          <button class="mobile-link logout-btn" (click)="logout(); closeMenu()">
+            <mat-icon>logout</mat-icon>
+            Sair
+          </button>
+        } @else {
+          <button class="mobile-link" (click)="navegar('/login'); closeMenu()">
+            <mat-icon>login</mat-icon>
+            Entrar
+          </button>
+        }
+      </div>
+    </nav>
+  }
+</header>

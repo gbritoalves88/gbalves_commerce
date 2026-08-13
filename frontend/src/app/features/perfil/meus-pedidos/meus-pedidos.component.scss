@@ -1,12 +1,109 @@
 // features/perfil/meus-pedidos/meus-pedidos.component.scss
-.meus-pedidos {
-  h2 {
-    font-size: 1.3rem;
+.meus-pedidos-page {
+  padding: 30px 0 60px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.perfil-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+// Sidebar
+.perfil-sidebar {
+  background: white;
+  padding: 32px 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  text-align: center;
+
+  h3 {
+    font-size: 1.1rem;
     color: #333;
-    margin: 0 0 20px;
+    margin: 12px 0 4px;
+  }
+
+  p {
+    color: #999;
+    font-size: 0.85rem;
+    margin: 0 0 24px;
+    word-break: break-all;
   }
 }
 
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  background: #e8eaf6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: #1a237e;
+  }
+}
+
+.perfil-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  color: #666;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s;
+  font-weight: 500;
+
+  &:hover {
+    background: #f5f5f5;
+    color: #1a237e;
+  }
+
+  &.active {
+    background: #e8eaf6;
+    color: #1a237e;
+  }
+}
+
+// Conteúdo
+.perfil-content {
+  .content-card {
+    background: white;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    h2 {
+      font-size: 1.3rem;
+      color: #333;
+      margin: 0 0 24px;
+    }
+  }
+}
+
+// Lista de pedidos
 .pedidos-list {
   display: flex;
   flex-direction: column;
@@ -17,14 +114,17 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  background: white;
+  background: #fafafa;
   padding: 16px 20px;
   border-radius: 10px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  border: 1px solid #eee;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
 
-  &:hover { background: #fafafa; }
+  &:hover {
+    background: #f0f0f0;
+    border-color: #ddd;
+  }
 }
 
 .pedido-info {
@@ -33,14 +133,22 @@
   flex-direction: column;
   gap: 2px;
 
-  strong { color: #333; font-size: 0.95rem; }
-  span { color: #999; font-size: 0.8rem; }
+  strong {
+    color: #333;
+    font-size: 0.95rem;
+  }
+
+  span {
+    color: #999;
+    font-size: 0.8rem;
+  }
 }
 
 .pedido-total {
   font-weight: 700;
   color: #1a237e;
   font-size: 0.95rem;
+  white-space: nowrap;
 }
 
 .status-badge {
@@ -49,6 +157,7 @@
   color: white;
   font-size: 0.75rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .arrow {
@@ -58,16 +167,7 @@
   height: 20px;
 }
 
-.empty {
-  text-align: center;
-  padding: 40px;
-  color: #999;
-
-  mat-icon { font-size: 48px; width: 48px; height: 48px; }
-  p { margin-top: 8px; }
-}
-
-// Adicionar no SCSS
+// Estado vazio
 .empty {
   text-align: center;
   padding: 60px 20px;
@@ -103,10 +203,24 @@
   text-decoration: none;
   font-size: 0.9rem;
 
-  &:hover { text-decoration: underline; }
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+// Responsivo
+@media (max-width: 768px) {
+  .perfil-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .pedido-card {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 }

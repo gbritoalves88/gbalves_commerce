@@ -19,14 +19,16 @@ import { PerfilComponent } from './features/perfil/perfil/perfil.component';
 import { MeusPedidosComponent } from './features/perfil/meus-pedidos/meus-pedidos.component';
 import { ConfiguracoesComponent } from './features/admin/configuracoes/configuracoes.component';
 import { authGuard } from './shared/guards/auth.guard';
+import { adminGuard, operadorGuard } from './shared/guards/admin.guard';
 import { BannersComponent } from './features/admin/banners/banners.component';
 import { BannerFormComponent } from './features/admin/banners/banner-form/banner-form.component';
 import { MenusComponent } from './features/admin/menus/menus.component';
 import { CadastroComponent } from './features/cadastro/cadastro.component';
 import { InstitucionalComponent } from './features/institucional/institucional.component';
+import { PagamentoComponent } from './features/pagamento/pagamento.component';
 
 export const routes: Routes = [
-  // Loja
+  // Loja (público)
   { path: '', component: HomeComponent },
   { path: 'produtos', component: ProdutoListaComponent },
   { path: 'produtos/:slug', component: ProdutoDetalheComponent },
@@ -38,12 +40,15 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'cadastro', component: CadastroComponent },
   { path: 'pagina/:pagina', component: InstitucionalComponent },
+  { path: 'pagamento/:pedidoId', component: PagamentoComponent, canActivate: [authGuard] },
 
-  // Admin
+  // Admin (com sidebar)
   {
     path: 'admin',
     component: AdminLayoutComponent,
+    canActivate: [operadorGuard],  // Admin ou Operador
     children: [
+      // Operador e Admin
       { path: '', component: DashboardComponent },
       { path: 'produtos', component: ProdutosComponent },
       { path: 'produtos/new', component: ProductFormComponent },
@@ -53,11 +58,13 @@ export const routes: Routes = [
       { path: 'categorias/edit/:id', component: CategoriaFormComponent },
       { path: 'pedidos', component: PedidosComponent },
       { path: 'pedidos/:id', component: PedidoDetalhesComponent },
-      { path: 'configuracoes', component: ConfiguracoesComponent },
-      { path: 'banners', component: BannersComponent },
-      { path: 'banners/new', component: BannerFormComponent },
-      { path: 'banners/edit/:id', component: BannerFormComponent },
-      { path: 'menus', component: MenusComponent },
+
+      // Somente Admin
+      { path: 'configuracoes', component: ConfiguracoesComponent, canActivate: [adminGuard] },
+      { path: 'banners', component: BannersComponent, canActivate: [adminGuard] },
+      { path: 'banners/new', component: BannerFormComponent, canActivate: [adminGuard] },
+      { path: 'banners/edit/:id', component: BannerFormComponent, canActivate: [adminGuard] },
+      { path: 'menus', component: MenusComponent, canActivate: [adminGuard] },
     ]
   }
 ];

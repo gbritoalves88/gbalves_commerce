@@ -1,16 +1,9 @@
 // shared/services/pedido.service.ts
 import { Injectable, inject, signal } from '@angular/core';
 import { ApiService } from '../services/api.service';
-import { CriarPedidoRequest, PedidoResponse } from '../models/pedido';
+import { CriarPedidoRequest, PedidoResponse, PedidoResumo } from '../models/pedido';
 import { Observable, tap } from 'rxjs';
 
-export interface PedidoResumo {
-  id: string;
-  numeroPedido: number;
-  status: string;
-  total: number;
-  criadoEm: string;
-}
 
 @Injectable({ providedIn: 'root' })
 export class PedidoService {
@@ -33,10 +26,26 @@ export class PedidoService {
   }
 
   atualizarStatus(id: string, status: string): Observable<void> {
-    return this.api.patch(`Pedidos/${id}/status`, status);
+    return this.api.patch(`Pedidos/${id}/status`, `"${status}"`);
   }
 
   meusPedidos(): Observable<PedidoResumo[]> {
     return this.api.get<PedidoResumo[]>('Pedidos/meus');
+  }
+
+  cancelarPedido(id: string): Observable<any> {
+    return this.api.post(`Pedidos/${id}/cancelar`, {});
+  }
+
+  verificarPagamento(id: string): Observable<any> {
+    return this.api.get<any>(`Pedidos/${id}/verificar-pagamento`);
+  }
+
+  confirmarPagamento(id: string): Observable<any> {
+    return this.api.post('Webhook/pagamento', { id, topic: 'payment' });
+  }
+
+  salvarRastreio(id: string, codigoRastreio: string): Observable<any> {
+    return this.api.put(`Pedidos/${id}/rastreio`, { codigoRastreio });
   }
 }

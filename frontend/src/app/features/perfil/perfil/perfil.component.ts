@@ -52,16 +52,26 @@ export class PerfilComponent implements OnInit {
     if (!userId) return;
     this.salvando = true;
 
+    // AGORA envia telefone e CPF também
     this.perfilService.atualizar(userId, {
       nome: this.usuario.nome,
-      email: this.usuario.email
+      email: this.usuario.email,
+      telefone: this.usuario.telefone,
+      cpf: this.usuario.cpf
     }).subscribe({
       next: () => {
         this.alertService.success('Perfil atualizado com sucesso!');
         this.salvando = false;
+
+        // Atualizar dados no AuthService também
+        const user = this.authService.currentUser();
+        if (user) {
+          user.telefone = this.usuario.telefone;
+          user.cpf = this.usuario.cpf;
+        }
       },
-      error: () => {
-        this.alertService.error('Erro ao atualizar perfil.');
+      error: (err) => {
+        this.alertService.error(err.error?.erro || 'Erro ao atualizar perfil.');
         this.salvando = false;
       }
     });

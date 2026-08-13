@@ -2,55 +2,62 @@
 <section class="pedido-confirmado">
   <div class="container">
     <div class="confirmation-card">
-      <!-- Ícone de Sucesso -->
       <div class="success-icon">
         <mat-icon>check_circle</mat-icon>
       </div>
 
-      <h1>Pedido Confirmado!</h1>
-      <p class="order-number">Pedido #{{ orderId }}</p>
+      @if (loading()) {
+        <p>Carregando...</p>
+      } @else if (pedido()) {
+        <h1>Pedido Confirmado!</h1>
+        <p class="order-number">Pedido #{{ pedido()?.numeroPedido }}</p>
 
-      <p class="message">
-        Seu pedido foi recebido e está sendo processado.
-        Você receberá atualizações no seu e-mail.
-      </p>
-
-      <!-- Instruções PIX (mock) -->
-      <div class="pix-section">
-        <h3>📱 Pagamento via Pix</h3>
-        <p>Escaneie o QR Code ou copie a chave abaixo:</p>
-
-        <div class="qr-code">
-          <div class="qr-placeholder">
-            <mat-icon>qr_code</mat-icon>
-            <span>QR Code</span>
+        <div class="pedido-info">
+          <div class="info-row">
+            <span>Valor Total:</span>
+            <strong>R$ {{ pedido()?.total?.toFixed(2) }}</strong>
+          </div>
+          <div class="info-row">
+            <span>Forma de Pagamento:</span>
+            <strong>{{ formaPagamento }}</strong>
+          </div>
+          <div class="info-row">
+            <span>Status do Pagamento:</span>
+            <strong [class.approved]="statusPagamento.includes('Aprovado')">{{ statusPagamento }}</strong>
+          </div>
+          <div class="info-row">
+            <span>Status do Pedido:</span>
+            <strong>{{ pedido()?.status }}</strong>
           </div>
         </div>
 
-        <div class="pix-key">
-          <span>Chave Pix:</span>
-          <code>gbalvescommerce{{ '@' }}email.com</code>
-          <button mat-icon-button>
-            <mat-icon>content_copy</mat-icon>
-          </button>
-        </div>
+        @if (pedido()?.codigoRastreio) {
+          <div class="info-row">
+            <span>📦 Rastreio:</span>
+            <strong>{{ pedido()?.codigoRastreio }}</strong>
+            <a [href]="'https://rastreamento.correios.com.br/app/resultado.php?objeto=' + pedido()?.codigoRastreio"
+              target="_blank" mat-button>Rastrear</a>
+          </div>
+        }
 
-        <p class="pix-warning">
-          ⚠️ O pagamento deve ser realizado em até 30 minutos.
+        <p class="message">
+          Seu pedido foi recebido e está sendo processado.
+          Você receberá atualizações no seu e-mail.
         </p>
-      </div>
+      } @else {
+        <h1>Pedido não encontrado</h1>
+      }
 
-      <!-- Ações -->
       <div class="actions">
         <a mat-fab extended routerLink="/" class="home-btn">
           <mat-icon>home</mat-icon>
           Voltar para Home
         </a>
-         <a mat-fab extended routerLink="/perfil/pedidos" class="track-btn">
+        <a mat-fab extended routerLink="/perfil/pedidos" class="track-btn">
           <mat-icon>receipt_long</mat-icon>
           Meus Pedidos
         </a>
       </div>
     </div>
   </div>
-</section>
+

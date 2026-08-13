@@ -18,6 +18,12 @@ export class ProdutoService {
     );
   }
 
+  loadAllAdmin(): Observable<Produto[]> {
+    return this.api.get<Produto[]>('Produtos/admin').pipe(
+      tap(p => this.produtos.set(p))
+    );
+  }
+
   loadDestaques(): Observable<Produto[]> {
     return this.api.get<Produto[]>('Produtos/destaques').pipe(
       tap(p => this.destaques.set(p))

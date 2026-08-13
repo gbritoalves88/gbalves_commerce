@@ -9,7 +9,11 @@ export interface Produto {
   estoque: number;
   destaque: boolean;
   ativo: boolean;
-  categoriaId: string | null;    // ← UUID da categoria
-  categoriaNome: string | null;  // ← Nome para exibição
+  categoriaId: string | null;
+  categoriaNome: string | null;
   criadoEm: string;
+  peso: number;           // ← novo
+  altura: number;         // ← novo
+  largura: number;        // ← novo
+  comprimento: number;    // ← novo
 }

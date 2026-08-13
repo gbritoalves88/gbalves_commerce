@@ -21,7 +21,7 @@ export class ProdutosComponent implements OnInit {
   displayedColumns = ['imagemUrl', 'nome', 'preco', 'estoque', 'categoriaNome', 'actions'];
 
   ngOnInit(): void {
-    this.produtoService.loadAll().subscribe();
+    this.produtoService.loadAllAdmin().subscribe();
   }
 
   deleteProduto(id: string, nome: string): void {

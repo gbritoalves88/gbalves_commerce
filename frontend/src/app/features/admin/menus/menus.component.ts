@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { MenuService } from '../../../shared/services/menu.service';
 import { CategoriaService } from '../../../shared/services/categoria.service';
 import { AlertService } from '../../../shared/services/alert.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-menus',
@@ -18,6 +19,7 @@ import { AlertService } from '../../../shared/services/alert.service';
   imports: [
     MatIconModule, MatButtonModule, MatFormFieldModule,
     MatInputModule, MatSelectModule, MatTableModule,
+    MatTooltipModule,
     FormsModule, RouterModule
   ],
   templateUrl: './menus.component.html',
@@ -100,5 +102,23 @@ export class MenusComponent implements OnInit {
         error: () => this.alertService.error('Erro ao remover item')
       });
     }
+  }
+
+  toggleItem(itemId: string): void {
+    this.menuService.toggleItem(itemId).subscribe({
+      next: () => {
+        if (this.menuSelecionadoId) {
+          this.menuService.carregarItens(this.menuSelecionadoId).subscribe();
+        }
+      },
+      error: () => this.alertService.error('Erro ao alterar status')
+    });
+  }
+
+  toggleMenu(menuId: string): void {
+    this.menuService.toggleMenu(menuId).subscribe({
+      next: () => this.menuService.carregarMenus().subscribe(),
+      error: () => this.alertService.error('Erro ao alterar status')
+    });
   }
 }

@@ -53,6 +53,35 @@
       </mat-form-field>
     </div>
 
+    <!-- Dimensões para Frete -->
+    <h3>📦 Dimensões para Frete</h3>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Peso (kg)</mat-label>
+        <input matInput type="number" [(ngModel)]="product.peso" name="peso"
+               min="0" step="0.01" placeholder="0.3">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Altura (cm)</mat-label>
+        <input matInput type="number" [(ngModel)]="product.altura" name="altura"
+               min="0" placeholder="10">
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Largura (cm)</mat-label>
+        <input matInput type="number" [(ngModel)]="product.largura" name="largura"
+               min="0" placeholder="15">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>Comprimento (cm)</mat-label>
+        <input matInput type="number" [(ngModel)]="product.comprimento" name="comprimento"
+               min="0" placeholder="20">
+      </mat-form-field>
+    </div>
+
     <div class="upload-area">
       <input type="file" #fileInput (change)="uploadImagem($event)" accept="image/*" hidden>
       <button type="button" mat-stroked-button (click)="fileInput.click()" [disabled]="uploading">
@@ -76,6 +105,10 @@
 
     <mat-slide-toggle [(ngModel)]="product.destaque" name="destaque">
       Destaque na Home
+    </mat-slide-toggle>
+
+    <mat-slide-toggle [(ngModel)]="product.ativo" name="ativo">
+      Ativo (visível na loja)
     </mat-slide-toggle>
 
     <div class="form-actions">

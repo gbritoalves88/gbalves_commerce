@@ -1,5 +1,6 @@
 // features/admin/menus/menus.component.scss
 .menus-admin {
+  margin-top: -150px;
   h1 { font-size: 1.8rem; color: #333; margin: 0; }
 }
 
@@ -30,6 +31,17 @@
     padding: 8px 20px; border-radius: 8px;
     &.active { background: #1a237e; color: white; }
   }
+}
+
+.menu-item-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.inativo {
+  opacity: 0.5;
+  text-decoration: line-through;
 }
 
 .table-wrapper {

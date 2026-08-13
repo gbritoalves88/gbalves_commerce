@@ -7,11 +7,13 @@ import { Title, Meta } from '@angular/platform-browser';
 import { filter, map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ToastComponent } from './shared/toast/toast.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, ToastComponent],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, ToastComponent, MatIconModule, MatButtonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -20,6 +22,8 @@ export class AppComponent implements OnInit {
   private configService = inject(ConfigService);
   private title = inject(Title);
   private meta = inject(Meta);
+
+  cookiesAceitos = localStorage.getItem('cookies') === 'aceito';
 
   isLoginPage = toSignal(
     this.router.events.pipe(
@@ -42,5 +46,15 @@ export class AppComponent implements OnInit {
         }
 
     });
+  }
+
+  aceitarCookies(): void {
+    localStorage.setItem('cookies', 'aceito');
+    this.cookiesAceitos = true;
+  }
+
+  recusarCookies(): void {
+    localStorage.setItem('cookies', 'recusado');
+    this.cookiesAceitos = true; // esconde o banner mesmo recusando
   }
 }

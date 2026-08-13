@@ -1,4 +1,10 @@
 <!-- app/app.html -->
+<!-- Aviso Sandbox -->
+<div class="aviso-sandbox">
+  <mat-icon>info</mat-icon>
+  <span>🛍️ Site de demonstração - Produtos fictícios - Nenhuma venda real é realizada</span>
+</div>
+
 <app-toast></app-toast>
 
 @if (!isLoginPage()) {
@@ -10,4 +16,19 @@
 } @else {
   <app-toast></app-toast>
   <router-outlet></router-outlet>
+}
+
+<!-- Banner de Cookies -->
+@if (!cookiesAceitos) {
+  <div class="cookie-banner">
+    <p>
+      🍪 Utilizamos cookies para melhorar sua experiência.
+      Ao continuar navegando, você concorda com nossa
+      <a routerLink="/pagina/privacidade">Política de Privacidade</a>.
+    </p>
+    <div class="cookie-actions">
+      <button mat-flat-button (click)="aceitarCookies()">Aceitar</button>
+      <button mat-stroked-button (click)="recusarCookies()">Recusar</button>
+    </div>
+  </div>
 }

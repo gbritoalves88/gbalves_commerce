@@ -2,14 +2,13 @@
 <div class="pedido-detalhes">
   <div class="page-header">
     <a routerLink="/admin/pedidos" class="back-link">
-      <mat-icon>arrow_back</mat-icon>
-      Voltar
+      <mat-icon>arrow_back</mat-icon> Voltar
     </a>
   </div>
 
   @if (pedido) {
     <div class="detail-grid">
-      <!-- Info Principal -->
+      <!-- Principal -->
       <div class="detail-card">
         <div class="card-header">
           <h2>Pedido #{{ pedido.numeroPedido }}</h2>
@@ -18,52 +17,103 @@
           </span>
         </div>
 
+        <div class="info-row"><span>Data:</span><strong>{{ pedido.criadoEm | date:'dd/MM/yyyy HH:mm' }}</strong></div>
+        <div class="info-row"><span>Pagamento:</span><strong>{{ pedido.formaPagamento || '-' }}</strong></div>
+        <div class="info-row"><span>Status Pagamento:</span><strong>{{ pedido.statusPagamento || '-' }}</strong></div>
+        <div class="info-row"><span>Total:</span><strong class="total-value">R$ {{ pedido.total.toFixed(2) }}</strong></div>
+        <div class="info-row"><span>Frete:</span><strong>R$ {{ pedido.frete.toFixed(2) }}</strong></div>
+
         <div class="info-row">
-          <span>Data:</span>
-          <strong>{{ pedido.criadoEm | date:'dd/MM/yyyy HH:mm' }}</strong>
+          <span>ID Pedido:</span>
+          <strong style="font-size:0.8rem;word-break:break-all;">{{ pedido.id }}</strong>
         </div>
         <div class="info-row">
-          <span>Pagamento:</span>
-          <strong>{{ pedido.formaPagamento === 'pix' ? 'Pix' : 'Cartão' }}</strong>
+          <span>ID Pagamento:</span>
+          <strong style="font-size:0.8rem;word-break:break-all;">{{ pedido.pagamentoId || '-' }}</strong>
         </div>
         <div class="info-row">
-          <span>Total:</span>
-          <strong class="total-value">R$ {{ pedido.total.toFixed(2) }}</strong>
-        </div>
-        <div class="info-row">
-          <span>Frete:</span>
-          <strong>R$ {{ pedido.frete.toFixed(2) }}</strong>
+          <span>Gateway ID:</span>
+          <strong style="font-size:0.8rem;word-break:break-all;">{{ pedido.gatewayPagamentoId || '-' }}</strong>
         </div>
 
-        <!-- Atualizar Status -->
+        <div class="acoes">
+          <button mat-stroked-button (click)="verificarPagamento()">
+            <mat-icon>payment</mat-icon> Verificar Pagamento
+          </button>
+          <button mat-stroked-button (click)="confirmarPagamento()">
+            <mat-icon>check_circle</mat-icon> Confirmar Pagamento
+          </button>
+          <button mat-stroked-button color="warn" (click)="cancelarPedido()"
+                  [disabled]="pedido.statusPagamento === 'Aprovado' || pedido.status === 'Cancelado'">
+            <mat-icon>cancel</mat-icon> Cancelar Pedido
+          </button>
+        </div>
+
         <div class="status-update">
           <mat-form-field appearance="outline">
             <mat-label>Atualizar Status</mat-label>
-            <mat-select [value]="pedido.status"
-                        (selectionChange)="atualizarStatus($event.value)">
+            <mat-select [value]="pedido.status" (selectionChange)="novoStatusSelecionado = $event.value">
               @for (status of statusList; track status) {
-                <mat-option [value]="status">
-                  {{ status }}
-                </mat-option>
+                <mat-option [value]="status">{{ getStatusLabel(status) }}</mat-option>
               }
             </mat-select>
           </mat-form-field>
+          <button mat-flat-button class="btn-atualizar" (click)="atualizarStatus()"
+                  [disabled]="!novoStatusSelecionado || novoStatusSelecionado === pedido.status">
+            <mat-icon>save</mat-icon> Atualizar Status
+          </button>
         </div>
       </div>
 
-      <!-- Dados do Cliente -->
+      <!-- Cliente -->
       <div class="detail-card">
         <h3>👤 Dados do Cliente</h3>
         <p><strong>Nome:</strong> {{ pedido.clienteNome }}</p>
+        <p><strong>Email:</strong> {{ pedido.clienteEmail || '-' }}</p>
+        <p><strong>Telefone:</strong> {{ pedido.clienteTelefone || '-' }}</p>
       </div>
 
-      <!-- Resumo -->
+      <!-- Endereço -->
       <div class="detail-card">
-        <h3>📦 Resumo</h3>
+        <h3>📍 Endereço de Entrega</h3>
+        <p><strong>CEP:</strong> {{ pedido.cep || '-' }}</p>
+        <p>{{ pedido.rua || '-' }}, {{ pedido.numero || '-' }}</p>
+        @if (pedido.complemento) { <p>Complemento: {{ pedido.complemento }}</p> }
+        <p>{{ pedido.bairro || '-' }} - {{ pedido.cidade || '-' }}/{{ pedido.estado || '-' }}</p>
+      </div>
+
+      <!-- Itens -->
+      <div class="detail-card">
+        <h3>📦 Itens do Pedido</h3>
+        @for (item of pedido.itens; track item.id) {
+          <div class="item-row">
+            <img [src]="item.imagemProduto" [alt]="item.nomeProduto" class="item-img">
+            <div class="item-info">
+              <strong>{{ item.nomeProduto }}</strong>
+              <span>Qtd: {{ item.quantidade }} | R$ {{ item.preco.toFixed(2) }}</span>
+              <span>Total: R$ {{ item.total.toFixed(2) }}</span>
+            </div>
+          </div>
+        }
+        <div class="summary-divider"></div>
         <p><strong>Subtotal:</strong> R$ {{ pedido.subtotal.toFixed(2) }}</p>
         <p><strong>Frete:</strong> R$ {{ pedido.frete.toFixed(2) }}</p>
         <p><strong>Total:</strong> R$ {{ pedido.total.toFixed(2) }}</p>
-        <p><strong>Forma de Pagamento:</strong> {{ pedido.formaPagamento }}</p>
+      </div>
+
+      <!-- Rastreio -->
+      <div class="detail-card">
+        <h3>🚚 Rastreio</h3>
+        @if (pedido.codigoRastreio) {
+          <p><strong>Código:</strong> {{ pedido.codigoRastreio }}</p>
+        }
+        <mat-form-field appearance="outline">
+          <mat-label>Código de Rastreio</mat-label>
+          <input matInput [(ngModel)]="codigoRastreio" placeholder="QB123456789BR">
+        </mat-form-field>
+        <button mat-flat-button class="btn-atualizar" (click)="salvarRastreio()">
+          <mat-icon>save</mat-icon> Salvar Rastreio
+        </button>
       </div>
     </div>
   } @else {

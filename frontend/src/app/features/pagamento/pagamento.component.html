@@ -1,0 +1,126 @@
+<!-- features/pagamento/pagamento.component.html -->
+<section class="pagamento-page">
+  <div class="container">
+    <h1>Pagamento</h1>
+
+    <!-- Seletor de método -->
+    <div class="metodo-selector">
+      <button mat-stroked-button
+              [class.active]="metodoSelecionado === 'pix'"
+              (click)="selecionarMetodo('pix')">
+        <mat-icon>pix</mat-icon> Pix
+      </button>
+      <button mat-stroked-button
+              [class.active]="metodoSelecionado === 'cartao'"
+              (click)="selecionarMetodo('cartao')">
+        <mat-icon>credit_card</mat-icon> Cartão
+      </button>
+    </div>
+
+    <!-- PIX -->
+   @if (metodoSelecionado === 'pix') {
+    @if (loading()) {
+      <div class="loading">Gerando QR Code...</div>
+    } @else if (qrCode()) {
+      <div class="pagamento-card">
+        <h2>Pague com Pix</h2>
+        <p class="subtitle">Escaneie o QR Code com seu aplicativo de banco</p>
+
+        <div class="qr-code-container">
+          <img [src]="'data:image/png;base64,' + qrCode()" alt="QR Code Pix" class="qr-code">
+        </div>
+
+        <div class="pix-info">
+          <div class="info-row">
+            <mat-icon>schedule</mat-icon>
+            <span>Prazo de pagamento: <strong>30 minutos</strong></span>
+          </div>
+          <div class="info-row">
+            <mat-icon>lock</mat-icon>
+            <span>Pagamento seguro via Mercado Pago</span>
+          </div>
+          <div class="info-row">
+            <mat-icon>check_circle</mat-icon>
+            <span>Confirmação instantânea após pagamento</span>
+          </div>
+        </div>
+
+        <div class="validade">
+          ⚠️ O QR Code expira em 30 minutos. Após o vencimento, será necessário gerar um novo.
+        </div>
+
+        <div class="acoes">
+
+          <button mat-stroked-button routerLink="/pedido-confirmado/{{ pedidoId }}">
+            <mat-icon>arrow_back</mat-icon>
+            Ver pedido
+          </button>
+        </div>
+      </div>
+    }
+    <!-- @else {
+      <button mat-flat-button class="btn-pix" (click)="gerarPix()">
+        <mat-icon>pix</mat-icon>
+        Gerar QR Code Pix
+      </button>
+    }-->
+  }
+
+    <!-- CARTÃO -->
+    @if (metodoSelecionado === 'cartao') {
+      <div class="pagamento-card">
+        <h2>Cartão de Crédito</h2>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Número do Cartão</mat-label>
+          <input matInput [(ngModel)]="cardNumber" maxlength="19" placeholder="0000 0000 0000 0000">
+          <mat-icon matPrefix>credit_card</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nome no Cartão</mat-label>
+          <input matInput [(ngModel)]="cardName">
+          <mat-icon matPrefix>person</mat-icon>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Mês</mat-label>
+            <input matInput [(ngModel)]="cardExpMonth" maxlength="2" placeholder="MM">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Ano</mat-label>
+            <input matInput [(ngModel)]="cardExpYear" maxlength="4" placeholder="AAAA">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>CVV</mat-label>
+            <input matInput [(ngModel)]="cardCvv" maxlength="4" type="password">
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>CPF do Titular</mat-label>
+          <input matInput [(ngModel)]="cardCpf" maxlength="14">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Parcelas</mat-label>
+          <mat-select [(ngModel)]="parcelas">
+            @for (p of [1,2,3,4,5,6]; track p) {
+              <mat-option [value]="p">{{ p }}x</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-flat-button class="btn-confirmar"
+                (click)="pagarCartao()" [disabled]="loading()">
+          {{ loading() ? 'Processando...' : 'Pagar com Cartão' }}
+        </button>
+
+        @if (status()) {
+          <p class="status">Status: {{ status() }}</p>
+        }
+      </div>
+    }
+  </div>
+</section>

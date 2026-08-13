@@ -11,7 +11,6 @@ export const authGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  // Salvar URL que o usuário tentou acessar
   router.navigate(['/login'], {
     queryParams: { returnUrl: state.url }
   });

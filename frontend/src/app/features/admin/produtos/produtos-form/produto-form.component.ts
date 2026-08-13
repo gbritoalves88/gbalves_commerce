@@ -43,9 +43,8 @@ export class ProductFormComponent implements OnInit {
     id: '', nome: '', slug: '', descricao: '', preco: 0,
     precoOriginal: null, imagemUrl: '', estoque: 0,
     destaque: false, ativo: true,
-    categoriaId: null,
-    categoriaNome: null,
-    criadoEm: ''
+    categoriaId: null, categoriaNome: null, criadoEm: '',
+    peso: 0.3, altura: 10, largura: 15, comprimento: 20  // ← valores padrão
   };
 
   ngOnInit(): void {

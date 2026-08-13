@@ -40,10 +40,6 @@ export class AuthService {
     return localStorage.getItem('auth_token');
   }
 
-  isAdmin(): boolean {
-    return this.currentUser()?.nivelAcesso === 'admin';
-  }
-
   private checkAuth(): boolean {
     return !!localStorage.getItem('auth_token');
   }
@@ -55,5 +51,17 @@ export class AuthService {
 
   getUserId(): string | null {
     return this.currentUser()?.id || null;
+  }
+
+  isCliente(): boolean {
+    return this.currentUser()?.nivelAcesso === 'Cliente';
+  }
+
+  isAdmin(): boolean {
+    return this.currentUser()?.nivelAcesso === 'Admin';
+  }
+
+  isOperador(): boolean {
+    return this.currentUser()?.nivelAcesso === 'Operador';
   }
 }

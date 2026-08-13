@@ -8,10 +8,13 @@ import { RouterModule } from '@angular/router';
 import { CarrinhoService } from '../services/carrinho.service';
 import { AuthService } from '../services/auth.service';
 import { ConfigService } from '../services/config.service';
-import { MenuService, Menu } from '../services/menu.service';
+import { MenuService } from '../services/menu.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { Menu } from '../models/menu'
+import { ViewEncapsulation } from '@angular/core';
+import { ViewChild, QueryList, ViewChildren } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -21,7 +24,8 @@ import { MatMenuTrigger } from '@angular/material/menu';
     MatDividerModule, RouterModule,  FormsModule
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class HeaderComponent implements OnInit {
   menus: Menu[] = [];
@@ -36,16 +40,29 @@ export class HeaderComponent implements OnInit {
   private authService = inject(AuthService);
   private configService = inject(ConfigService);
   private menuService = inject(MenuService);
+  @ViewChildren(MatMenuTrigger) menuTriggers!: QueryList<MatMenuTrigger>;
 
   ngOnInit(): void {
     this.menuService.carregarMenus().subscribe(menus => {
-      this.menus = menus;
+      this.menus = menus
+        .filter(m => m.ativo && m.localizacao === 'header')
+        .map(m => ({
+          ...m,
+          itens: m.itens.filter(i => i.ativo)
+        }));
     });
   }
 
   @HostListener('window:scroll')
   onScroll(): void {
     this.scrolled = window.scrollY > 50;
+
+    // Fecha todos os submenus abertos quando scroll acontece
+    this.menuTriggers?.forEach(trigger => {
+      if (trigger.menuOpen) {
+        trigger.closeMenu();
+      }
+    });
   }
 
   buscar(): void {
@@ -68,9 +85,6 @@ export class HeaderComponent implements OnInit {
     return this.openSubmenus.has(menuId);
   }
 
-  navegar(url: string): void {
-    this.router.navigateByUrl(url);
-  }
 
   get storeName(): string {
     return this.configService.config()?.nomeLoja || '';
@@ -117,6 +131,22 @@ export class HeaderComponent implements OnInit {
   onMenuEnter(trigger: MatMenuTrigger): void {
     clearTimeout(this.closeTimeout);
     trigger.openMenu();
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  get isOperador(): boolean {
+    return this.authService.isOperador();
+  }
+
+  navegar(url: string): void {
+    this.router.navigateByUrl(url);
+  }
+
+  isActive(url: string): boolean {
+    return this.router.url === url || this.router.url.startsWith(url + '/');
   }
 
 

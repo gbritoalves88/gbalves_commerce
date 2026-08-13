@@ -1,9 +1,11 @@
-// features/perfil/meus-pedidos/meus-pedidos.component.ts
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
-import { PedidoService, PedidoResumo } from '../../../shared/services/pedido.service';
+import { PedidoService } from '../../../shared/services/pedido.service';
+import { AuthService } from '../../../shared/services/auth.service'; // Adicione esta linha
+import { PedidoResumo } from '../../../shared/models/pedido'
+import { StatusUtil } from '../../../shared/utils/status.util';
 
 @Component({
   selector: 'app-meus-pedidos',
@@ -14,36 +16,41 @@ import { PedidoService, PedidoResumo } from '../../../shared/services/pedido.ser
 })
 export class MeusPedidosComponent implements OnInit {
   private pedidoService = inject(PedidoService);
+  private authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
 
-  pedidos = signal<PedidoResumo[]>([]);
+  pedidos: PedidoResumo[] = [];
   loading = true;
+  usuario: any = {};
 
   ngOnInit(): void {
+    const user = this.authService.currentUser();
+    if (user) {
+      this.usuario.nome = user.nome || '';
+      this.usuario.email = user.email || '';
+      this.usuario.telefone = user.telefone || '';
+      this.usuario.cpf = user.cpf || '';
+      this.cdr.markForCheck();
+    }
+
     this.pedidoService.meusPedidos().subscribe({
-      next: (p) => { this.pedidos.set(p); this.loading = false; },
-      error: () => this.loading = false
+      next: (p) => {
+        this.pedidos = p;
+        this.loading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.loading = false;
+        this.cdr.markForCheck();
+      }
     });
   }
 
   getStatusLabel(status: string): string {
-    const labels: Record<string, string> = {
-      'Pendente': 'Pendente', 'Pending': 'Pendente',
-      'Pago': 'Pago', 'Paid': 'Pago',
-      'Enviado': 'Enviado', 'Shipped': 'Enviado',
-      'Entregue': 'Entregue', 'Delivered': 'Entregue',
-      'Cancelado': 'Cancelado', 'Cancelled': 'Cancelado'
-    };
-    return labels[status] || status;
+    return StatusUtil.getStatusPedidoLabel(status);
   }
 
   getStatusColor(status: string): string {
-    const colors: Record<string, string> = {
-      'Pendente': '#ff9800', 'Pending': '#ff9800',
-      'Pago': '#4caf50', 'Paid': '#4caf50',
-      'Enviado': '#2196f3', 'Shipped': '#2196f3',
-      'Entregue': '#9c27b0', 'Delivered': '#9c27b0',
-      'Cancelado': '#f44336', 'Cancelled': '#f44336'
-    };
-    return colors[status] || '#999';
+    return StatusUtil.getStatusPedidoColor(status);
   }
 }
