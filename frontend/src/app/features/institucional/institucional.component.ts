@@ -1,5 +1,4 @@
-// features/institucional/institucional.component.ts
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { ConfigService } from '../../shared/services/config.service';
@@ -11,13 +10,20 @@ import { ConfigService } from '../../shared/services/config.service';
   templateUrl: './institucional.component.html',
   styleUrl: './institucional.component.scss'
 })
-export class InstitucionalComponent {
+export class InstitucionalComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private configService = inject(ConfigService);
+
   pagina: string = '';
 
-  constructor() {
+  ngOnInit(): void {
+    // Lê o parâmetro inicial
     this.pagina = this.route.snapshot.paramMap.get('pagina') || '';
+
+    // Escuta mudanças de parâmetro (navegação entre páginas)
+    this.route.paramMap.subscribe(params => {
+      this.pagina = params.get('pagina') || '';
+    });
   }
 
   get titulo(): string {
