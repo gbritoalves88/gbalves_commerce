@@ -40,9 +40,9 @@
           <button mat-stroked-button (click)="verificarPagamento()">
             <mat-icon>payment</mat-icon> Verificar Pagamento
           </button>
-          <button mat-stroked-button (click)="confirmarPagamento()">
+          <!--<button mat-stroked-button (click)="confirmarPagamento()">
             <mat-icon>check_circle</mat-icon> Confirmar Pagamento
-          </button>
+          </button> -->
           <button mat-stroked-button color="warn" (click)="cancelarPedido()"
                   [disabled]="pedido.statusPagamento === 'Aprovado' || pedido.status === 'Cancelado'">
             <mat-icon>cancel</mat-icon> Cancelar Pedido

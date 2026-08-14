@@ -117,13 +117,9 @@ export class CheckoutComponent implements OnInit {
   private validarCpf(cpf: string): boolean {
     const numeros = cpf.replace(/\D/g, '');
 
-    // Verificar se tem 11 dígitos
     if (numeros.length !== 11) return false;
-
-    // Rejeitar CPFs com todos os dígitos iguais
     if (/^(\d)\1{10}$/.test(numeros)) return false;
 
-    // Validar primeiro dígito verificador
     let soma = 0;
     for (let i = 0; i < 9; i++) {
       soma += parseInt(numeros.charAt(i)) * (10 - i);
@@ -132,7 +128,6 @@ export class CheckoutComponent implements OnInit {
     if (resto === 10) resto = 0;
     if (resto !== parseInt(numeros.charAt(9))) return false;
 
-    // Validar segundo dígito verificador
     soma = 0;
     for (let i = 0; i < 10; i++) {
       soma += parseInt(numeros.charAt(i)) * (11 - i);
@@ -147,11 +142,8 @@ export class CheckoutComponent implements OnInit {
   private validarTelefone(telefone: string): boolean {
     const numeros = telefone.replace(/\D/g, '');
 
-    // Fixo: 10 dígitos (DDD + 8)
-    // Celular: 11 dígitos (DDD + 9)
     if (numeros.length < 10 || numeros.length > 11) return false;
 
-    // DDD válido (11-99)
     const ddd = parseInt(numeros.slice(0, 2));
     if (ddd < 11 || ddd > 99) return false;
 
@@ -222,39 +214,92 @@ export class CheckoutComponent implements OnInit {
 
   // ========== FINALIZAR PEDIDO ==========
   finalizarPedido(): void {
-    if (!this.isFormValid() || this.loading) {
-      return;
-    }
+    if (this.loading) return;
 
     // Limpar máscaras
     const telefoneLimpo = this.cliente.telefone.replace(/\D/g, '');
     const cpfLimpo = this.cliente.cpf.replace(/\D/g, '');
     const cepLimpo = this.cliente.cep.replace(/\D/g, '');
 
-    // Validação de telefone
+    // 1. Telefone
+    if (!telefoneLimpo) {
+      this.alertService.error('O campo Telefone é obrigatório!');
+      return;
+    }
     if (!this.validarTelefone(telefoneLimpo)) {
-      this.alertService.error('Telefone inválido! Verifique o DDD e o número.');
+      this.alertService.error('Telefone inválido! Use o formato (11) 91234-5678');
       return;
     }
 
-    // Validação de CPF (se informado)
-    if (cpfLimpo && !this.validarCpf(cpfLimpo)) {
-      this.alertService.error('CPF inválido! Verifique os dígitos.');
-      return;
+    // 2. CPF (opcional, mas se preenchido deve ser válido)
+    if (cpfLimpo) {
+      if (cpfLimpo.length !== 11) {
+        this.alertService.error('CPF inválido! Deve ter 11 dígitos.');
+        return;
+      }
+      if (!this.validarCpf(cpfLimpo)) {
+        this.alertService.error('CPF inválido! Verifique os dígitos.');
+        return;
+      }
     }
 
-    // Validação de CEP
+    // 3. CEP
+    if (!cepLimpo) {
+      this.alertService.error('O campo CEP é obrigatório!');
+      return;
+    }
     if (!this.validarCep(cepLimpo)) {
-      this.alertService.error('CEP inválido!');
+      this.alertService.error('CEP inválido! Deve ter 8 dígitos.');
       return;
     }
 
-    // Validação de frete
+    // 4. Rua
+    if (!this.cliente.rua.trim()) {
+      this.alertService.error('O campo Rua é obrigatório!');
+      return;
+    }
+
+    // 5. Número
+    if (!this.cliente.numero.trim()) {
+      this.alertService.error('O campo Número é obrigatório!');
+      return;
+    }
+
+    // 6. Bairro
+    if (!this.cliente.bairro.trim()) {
+      this.alertService.error('O campo Bairro é obrigatório!');
+      return;
+    }
+
+    // 7. Cidade
+    if (!this.cliente.cidade.trim()) {
+      this.alertService.error('O campo Cidade é obrigatório!');
+      return;
+    }
+
+    // 8. UF
+    if (!this.cliente.estado.trim()) {
+      this.alertService.error('O campo UF é obrigatório!');
+      return;
+    }
+    if (this.cliente.estado.length !== 2) {
+      this.alertService.error('UF inválida! Use 2 letras (ex: SP, RJ, MG).');
+      return;
+    }
+
+    // 9. Frete
     if (!this.freteSelecionado) {
-      this.alertService.error('Selecione uma opção de frete!');
+      this.alertService.error('Selecione uma opção de frete! Informe o CEP para calcular.');
       return;
     }
 
+    // 10. Forma de pagamento
+    if (!this.cliente.formaPagamento) {
+      this.alertService.error('Selecione a forma de pagamento!');
+      return;
+    }
+
+    // Tudo válido - criar pedido
     this.loading = true;
 
     const pedido = {
@@ -279,7 +324,11 @@ export class CheckoutComponent implements OnInit {
     this.pedidoService.criar(pedido).subscribe({
       next: (response) => {
         this.carrinhoService.clearCart();
-        this.router.navigate(['/pagamento', response.id]);
+
+        // Passar a forma de pagamento como query param
+        this.router.navigate(['/pagamento', response.id], {
+          queryParams: { metodo: this.cliente.formaPagamento }
+        });
       },
       error: (err) => {
         this.loading = false;
@@ -288,9 +337,21 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
+  // ========== VALIDAÇÃO DO FORMULÁRIO ==========
   isFormValid(): boolean {
-    return !!(this.cliente.telefone &&
-              this.cliente.cep && this.cliente.rua &&
-              this.cliente.numero && this.freteSelecionado);
+    const telefoneLimpo = this.cliente.telefone.replace(/\D/g, '');
+    const cepLimpo = this.cliente.cep.replace(/\D/g, '');
+
+    return !!(
+      telefoneLimpo.length >= 10 &&
+      cepLimpo.length === 8 &&
+      this.cliente.rua.trim() &&
+      this.cliente.numero.trim() &&
+      this.cliente.bairro.trim() &&
+      this.cliente.cidade.trim() &&
+      this.cliente.estado.length === 2 &&
+      this.freteSelecionado &&
+      this.cliente.formaPagamento
+    );
   }
 }

@@ -18,53 +18,70 @@
     </div>
 
     <!-- PIX -->
-   @if (metodoSelecionado === 'pix') {
-    @if (loading()) {
-      <div class="loading">Gerando QR Code...</div>
-    } @else if (qrCode()) {
-      <div class="pagamento-card">
-        <h2>Pague com Pix</h2>
-        <p class="subtitle">Escaneie o QR Code com seu aplicativo de banco</p>
+    @if (metodoSelecionado === 'pix') {
+      @if (loading()) {
+        <div class="loading">Gerando QR Code...</div>
+      } @else if (qrCodeBase64()) {
+        <div class="pagamento-card">
+          <h2>Pague com Pix</h2>
+          <p class="subtitle">Escaneie o QR Code com seu aplicativo de banco</p>
 
-        <div class="qr-code-container">
-          <img [src]="'data:image/png;base64,' + qrCode()" alt="QR Code Pix" class="qr-code">
-        </div>
-
-        <div class="pix-info">
-          <div class="info-row">
-            <mat-icon>schedule</mat-icon>
-            <span>Prazo de pagamento: <strong>30 minutos</strong></span>
+          <div class="qr-code-container">
+            <img [src]="'data:image/png;base64,' + qrCodeBase64()" alt="QR Code Pix" class="qr-code">
           </div>
-          <div class="info-row">
-            <mat-icon>lock</mat-icon>
-            <span>Pagamento seguro via Mercado Pago</span>
+
+          <!-- Código copia e cola -->
+          @if (qrCode()) {
+            <div class="pix-copy">
+              <code>{{ qrCode() }}</code>
+              <button mat-stroked-button (click)="copiarPix()">
+                <mat-icon>content_copy</mat-icon>
+                Copiar
+              </button>
+            </div>
+          }
+
+          <div class="pix-info">
+            <div class="info-row">
+              <mat-icon>schedule</mat-icon>
+              <span>Prazo de pagamento: <strong>30 minutos</strong></span>
+            </div>
+            <div class="info-row">
+              <mat-icon>lock</mat-icon>
+              <span>Pagamento seguro via Mercado Pago</span>
+            </div>
+            <div class="info-row">
+              <mat-icon>check_circle</mat-icon>
+              <span>Confirmação instantânea após pagamento</span>
+            </div>
           </div>
-          <div class="info-row">
-            <mat-icon>check_circle</mat-icon>
-            <span>Confirmação instantânea após pagamento</span>
+
+          <div class="validade">
+            ⚠️ O QR Code expira em 30 minutos. Após o vencimento, será necessário gerar um novo.
+          </div>
+
+          <div class="acoes">
+            <button mat-stroked-button (click)="gerarPix()" [disabled]="loading()">
+              <mat-icon>refresh</mat-icon>
+              Gerar novo QR Code
+            </button>
+            <button mat-stroked-button routerLink="/pedido-confirmado/{{ pedidoId }}">
+              <mat-icon>arrow_back</mat-icon>
+              Ver pedido
+            </button>
           </div>
         </div>
-
-        <div class="validade">
-          ⚠️ O QR Code expira em 30 minutos. Após o vencimento, será necessário gerar um novo.
-        </div>
-
-        <div class="acoes">
-
-          <button mat-stroked-button routerLink="/pedido-confirmado/{{ pedidoId }}">
-            <mat-icon>arrow_back</mat-icon>
-            Ver pedido
+      } @else {
+        <div class="pagamento-card">
+          <h2>Pague com Pix</h2>
+          <p class="subtitle">Gere o QR Code para continuar</p>
+          <button mat-flat-button class="btn-pix" (click)="gerarPix()" [disabled]="loading()">
+            <mat-icon>pix</mat-icon>
+            Gerar QR Code Pix
           </button>
         </div>
-      </div>
+      }
     }
-    <!-- @else {
-      <button mat-flat-button class="btn-pix" (click)="gerarPix()">
-        <mat-icon>pix</mat-icon>
-        Gerar QR Code Pix
-      </button>
-    }-->
-  }
 
     <!-- CARTÃO -->
     @if (metodoSelecionado === 'cartao') {
@@ -86,15 +103,34 @@
         <div class="form-row">
           <mat-form-field appearance="outline">
             <mat-label>Mês</mat-label>
-            <input matInput [(ngModel)]="cardExpMonth" maxlength="2" placeholder="MM">
+            <input matInput
+                  [(ngModel)]="cardExpMonth"
+                  name="cardExpMonth"
+                  maxlength="2"
+                  placeholder="MM"
+                  autocomplete="off">
           </mat-form-field>
+
+          <!-- Ano -->
           <mat-form-field appearance="outline">
             <mat-label>Ano</mat-label>
-            <input matInput [(ngModel)]="cardExpYear" maxlength="4" placeholder="AAAA">
+            <input matInput
+                  [(ngModel)]="cardExpYear"
+                  name="cardExpYear"
+                  maxlength="4"
+                  placeholder="AAAA"
+                  autocomplete="off">
           </mat-form-field>
+
+          <!-- CVV -->
           <mat-form-field appearance="outline">
             <mat-label>CVV</mat-label>
-            <input matInput [(ngModel)]="cardCvv" maxlength="4" type="password">
+            <input matInput
+                  [(ngModel)]="cardCvv"
+                  name="cardCvv"
+                  maxlength="4"
+                  type="password"
+                  autocomplete="off">
           </mat-form-field>
         </div>
 
