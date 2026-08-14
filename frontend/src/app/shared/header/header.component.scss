@@ -173,7 +173,7 @@
   font-weight: 700;
 }
 
-// ========== MENU (ALTERADO) ==========
+// ========== MENU (DESKTOP) ==========
 .main-nav {
   background: var(--cor-primaria);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -204,7 +204,6 @@
   border-radius: 0 !important;
   position: relative;
 
-  // Indicador inferior
   &::after {
     content: '';
     position: absolute;
@@ -245,7 +244,6 @@
   width: 100%;
   box-sizing: border-box;
 }
-
 
 .mobile-menu {
   position: fixed;
@@ -432,17 +430,23 @@
 // ========== MOBILE ==========
 @media (max-width: 768px) {
 
+   .header-fixed {
+    top: 32px;  // Aviso maior no mobile
+  }
+
   .main-row {
-    padding: 10px 0;
+    padding: 6px 0;
   }
 
   .main-row-content {
     display: grid;
-    grid-template-columns: 40px 1fr auto;
+    grid-template-columns: 36px 1fr auto;
     grid-template-rows: auto auto;
-    gap: 10px 8px;
+    gap: 6px;
     align-items: center;
-    padding: 0 12px;
+    padding: 0 8px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .menu-parent {
@@ -463,12 +467,14 @@
     grid-row: 1;
     justify-content: center;
     flex: none;
-    max-width: 200px;
-    font-size: 1.1rem;
+    max-width: 100px;
+    font-size: 0.9rem;
+    margin-right: 0;
 
     .logo-img {
-      height: 110px;
-      max-width: 200px;
+      height: 80px;
+      max-width: 100px;
+      object-fit: contain;
     }
   }
 
@@ -478,40 +484,65 @@
     flex: none;
     max-width: none;
     min-width: 0;
-    padding: 8px 12px;
-    input { font-size: 0.85rem; }
+    padding: 6px 10px;
+    width: 100%;
+    box-sizing: border-box;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      margin-right: 6px;
+    }
+
+    input {
+      font-size: 0.8rem;
+      width: 100%;
+      min-width: 0;
+    }
   }
 
   .actions {
     grid-column: 3;
     grid-row: 1;
     margin-left: 0;
-    gap: 4px;
+    gap: 0;
   }
 
   .header-fixed.scrolled {
     .main-row {
-      padding: 8px 0;
+      padding: 4px 0;
     }
     .logo {
-      max-width: 180px;
-      font-size: 1rem;
+      max-width: 80px;
+      font-size: 0.8rem;
     }
     .logo-img {
-      height: 90px;
-      max-width: 160px;
+      height: 35px;
+      max-width: 80px;
     }
     .search-bar {
-      padding: 7px 10px;
+      padding: 5px 8px;
     }
     .main-nav .nav-link {
-      padding: 11px 16px;
-      font-size: 0.9rem;
+      padding: 10px 14px;
+      font-size: 0.85rem;
     }
   }
 
-  .action-btn span { display: none; }
-  .action-btn mat-icon { font-size: 24px; width: 24px; height: 24px; }
+  .action-btn {
+    min-width: 36px !important;
+    padding: 2px !important;
+
+    span { display: none; }
+
+    mat-icon {
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+    }
+  }
+
   .desktop-only { display: none !important; }
   .top-bar { display: none; }
 
@@ -522,10 +553,10 @@
     .badge {
       position: absolute;
       top: -2px;
-      right: -6px;
-      width: 18px;
-      height: 18px;
-      font-size: 10px;
+      right: -4px;
+      width: 16px;
+      height: 16px;
+      font-size: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -534,6 +565,46 @@
       border-radius: 50%;
       font-weight: 700;
       z-index: 10;
+    }
+  }
+}
+
+// TELAS MUITO PEQUENAS (Redmi Note, iPhone SE, etc.)
+@media (max-width: 380px) {
+
+  .header-fixed {
+    top: 36px;
+  }
+
+  .main-row-content {
+    padding: 0 4px;
+    gap: 4px;
+  }
+
+  .logo {
+    max-width: 80px;
+
+    .logo-img {
+      height: 35px;
+      max-width: 80px;
+    }
+  }
+
+  .action-btn {
+    min-width: 28px !important;
+
+    mat-icon {
+      font-size: 18px !important;
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
+
+  .search-bar {
+    padding: 4px 8px;
+
+    input {
+      font-size: 0.75rem;
     }
   }
 }
