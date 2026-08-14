@@ -26,7 +26,7 @@ export class PedidoService {
   }
 
   atualizarStatus(id: string, status: string): Observable<void> {
-    return this.api.patch(`Pedidos/${id}/status`, `"${status}"`);
+    return this.api.patch(`Pedidos/${id}/status`, { novoStatus: status });
   }
 
   meusPedidos(): Observable<PedidoResumo[]> {

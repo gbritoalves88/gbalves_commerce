@@ -1,4 +1,3 @@
-<!-- features/pedido-confirmado/pedido-confirmado.component.html -->
 <section class="pedido-confirmado">
   <div class="container">
     <div class="confirmation-card">
@@ -31,6 +30,46 @@
           </div>
         </div>
 
+        <!-- QR Code PIX (se pendente) -->
+        @if (podePagarComPix) {
+          <div class="pix-payment-section">
+            <h3>💳 Pagamento Pendente</h3>
+            <p>Seu pedido está aguardando pagamento.</p>
+
+            @if (!qrCodeBase64() && !gerandoPix()) {
+              <button mat-flat-button class="btn-pix" (click)="gerarPix()">
+                <mat-icon>pix</mat-icon>
+                Gerar QR Code PIX
+              </button>
+            }
+
+            @if (gerandoPix()) {
+              <div class="loading-pix">Gerando QR Code...</div>
+            }
+
+            @if (qrCodeBase64()) {
+              <div class="qr-code-container">
+                <img [src]="'data:image/png;base64,' + qrCodeBase64()" alt="QR Code PIX">
+              </div>
+
+              @if (qrCode()) {
+                <div class="pix-copy">
+                  <code>{{ qrCode() }}</code>
+                  <button mat-stroked-button (click)="copiarPix()">
+                    <mat-icon>content_copy</mat-icon>
+                    Copiar
+                  </button>
+                </div>
+              }
+
+              <button mat-stroked-button (click)="gerarPix()" [disabled]="gerandoPix()">
+                <mat-icon>refresh</mat-icon>
+                Gerar novo QR Code
+              </button>
+            }
+          </div>
+        }
+
         @if (pedido()?.codigoRastreio) {
           <div class="info-row">
             <span>📦 Rastreio:</span>
@@ -60,4 +99,4 @@
       </div>
     </div>
   </div>
-
+</section>

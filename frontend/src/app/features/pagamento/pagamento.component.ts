@@ -52,6 +52,18 @@ export class PagamentoComponent implements OnInit {
 
   ngOnInit(): void {
     this.pedidoId = this.route.snapshot.paramMap.get('pedidoId') || '';
+
+    // Ler forma de pagamento do query param
+    const metodo = this.route.snapshot.queryParamMap.get('metodo');
+    if (metodo === 'cartao' || metodo === 'cartao_credito') {
+      this.metodoSelecionado = 'cartao';
+    } else {
+      this.metodoSelecionado = 'pix';
+
+      // Se for PIX, gera o QR Code automaticamente
+      setTimeout(() => this.gerarPix(), 100);
+    }
+
     const user = this.authService.currentUser();
     if (user) {
       this.emailComprador = user.email || '';
@@ -61,7 +73,8 @@ export class PagamentoComponent implements OnInit {
 
   selecionarMetodo(metodo: 'pix' | 'cartao'): void {
     this.metodoSelecionado = metodo;
-    if (metodo === 'pix' && !this.qrCode()) {
+
+    if (metodo === 'pix' && !this.qrCode() && !this.loading()) {
       this.gerarPix();
     }
   }
@@ -95,6 +108,16 @@ export class PagamentoComponent implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  copiarPix(): void {
+    if (this.qrCode()) {
+      navigator.clipboard.writeText(this.qrCode()).then(() => {
+        this.alertService.success('Código PIX copiado!');
+      }).catch(() => {
+        this.alertService.error('Erro ao copiar');
+      });
+    }
   }
 
   pagarCartao(): void {

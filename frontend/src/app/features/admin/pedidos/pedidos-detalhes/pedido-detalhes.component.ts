@@ -60,6 +60,7 @@ export class PedidoDetalhesComponent implements OnInit {
 
   atualizarStatus(): void {
     if (!this.pedido || !this.novoStatusSelecionado) return;
+
     this.pedidoService.atualizarStatus(this.pedido.id, this.novoStatusSelecionado).subscribe({
       next: () => {
         this.pedido!.status = this.novoStatusSelecionado!;
@@ -84,17 +85,19 @@ export class PedidoDetalhesComponent implements OnInit {
     });
   }
 
-  confirmarPagamento(): void {
-    if (!this.pedido || !this.pedido.pagamentoId) return;
 
-    this.pedidoService.confirmarPagamento(this.pedido.pagamentoId).subscribe({
-      next: () => {
-        this.alertService.success('Pagamento confirmado!');
-        this.carregarPedido();
-      },
-      error: () => this.alertService.error('Erro ao confirmar')
-    });
-  }
+
+  //confirmarPagamento(): void {
+    //if (!this.pedido || !this.pedido.pagamentoId) return;
+
+    //this.pedidoService.confirmarPagamento(this.pedido.pagamentoId).subscribe({
+      //next: () => {
+        //this.alertService.success('Pagamento confirmado!');
+        //this.carregarPedido();
+      //},
+      //error: () => this.alertService.error('Erro ao confirmar')
+    //});
+  //}
 
   salvarRastreio(): void {
     if (!this.pedido || !this.codigoRastreio) return;
