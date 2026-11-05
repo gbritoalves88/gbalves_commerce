@@ -8,6 +8,7 @@ O projeto é dividido em dois repositórios:
 
 - **Frontend:** Angular 21.
 - **Backend:** ASP.NET Core 9.
+- **Site:** https://gbalves-commerce.vercel.app/
 
 ## 🎯 Objetivo
 
